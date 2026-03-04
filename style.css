@@ -1,0 +1,115 @@
+/* Reset all browser defaults */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Headings styles */
+h1 {
+    text-align: center;
+    margin: auto;
+    font-size: 20px;
+    color: #2c3e50;
+    font-weight: bold;
+}
+
+h2 {
+    margin: 20px 0;
+    font-size: 16px;
+    color: #2980b9;
+}
+
+/* Main container */
+#main {
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+}
+
+/* Container styles */
+.container {
+    background: white;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+/* Table styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: auto;
+    align: center;
+}
+
+th, td {
+    padding: 3px;
+    text-align: center;
+}
+
+.boxverb {
+    width: 100px;
+    height: 40px;
+    margin: 6px;
+    border-radius: 8px;
+    border: 0px;
+    background-color: greenyellow;
+    font-size: 16px;
+}
+
+.boxverb:hover {
+    background-color: gray;
+}
+
+.boxsubj {
+    width: 100px;
+    height: 40px;
+    margin: 6px;
+    border-radius: 8px;
+    border: 0px;
+    background-color:coral;
+    font-size: 16px;
+}
+
+.boxsubj:hover {
+    background-color: gray;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 18px;
+    }
+
+    h2 {
+        font-size: 16px;
+    }
+
+    #main {
+        padding: 10px;
+    }
+
+    .container {
+        padding: 10px;
+    }
+
+    th, td {
+        font-size: 0.9rem;
+    }
+}
+
+img {
+    width: 100px;
+    height: 100px;
+    margin: 8px;
+    align: center;
+}
