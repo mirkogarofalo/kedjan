@@ -1,20 +1,51 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-    <meta charset="utf-8">
-    <title>Neisti - Interactive sentence generator for Icelandic </title>
-<link type="text/css" rel="stylesheet" href="css/style.css"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Keðjan 1.0.0 - Mirko Garofalo</title>
+<link rel="stylesheet" type="text/css" href="style.css">
 </head>
 
 <body>
-    <!-- Start your code here -->
-    <div id="main">
-        <div class=container id="menu">
-    <h1>Neisti - Interactive sentence generator for Icelandic</h1>
-Generator Instructions Author Contact</div>
-        <div class="container" id="verb">
-            <h2>Veldu sögn (choose a verb):</h2>
+  <div class="dashboard">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-icon"></div>
+        <span>Íslenskutól</span>
+      </div>
+
+      <div class="menu-label">Menu</div>
+
+      <nav class="nav">
+        <a href="#" class="active">
+          <span class="nav-icon">?</span>
+          <span>About</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <strong>Any errors?</strong><br />
+        Please contact mig@hi.is if you find any bugs.
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div>
+          <div class="eyebrow">Interactive sentence builder</div>
+          <h1>Keðjan v.1.0.0 <span><img src="kedjan.png" width=54 height=54></span></h1>
+        </div>
+        <div class="profile">
+          <div class="avatar"><img id="mig" src="mig.jpg"></div>
+          <span>Author: Mirko Garofalo (mig@hi.is)</span>
+        </div>
+      </header>
+      
+ <section class="dialogwin" id="maincanvas">
+ <div class="container" id="verb">
+            <h2>Veldu sögn (Choose a verb):</h2>
+            <br>
             <table id="verblist"></table>
         </div>
         <div class="container" id="subj">
@@ -22,18 +53,39 @@ Generator Instructions Author Contact</div>
             <table id="nounlist"></table>
             <p id="ave"></p>
         </div>
+        <div class="container" id="adjsubj">
+            <h2>Veldu lýsingarorð fyrir frumlag (choose an adjective for the subject):</h2>
+            <table id="adjsubjlist"></table>
+            <p id="ave"></p>
+        </div>
+        <div class="container" id="adjobj">
+            <h2>Veldu lýsingarorð fyrir andlag (choose an adjective for the object):</h2>
+            <table id="adjobjlist"></table>
+            <p id="ave"></p>
+        </div>
+        <div class="container" id="aux">
+            <h2>Veldu hjálpar- eða háttarsögn (choose an auxiliary or modal verb):</h2>
+            <table id="auxlist"></table>
+            <p id="ave"></p>
+        </div>
         <div class="container" id="obj">
           <h2>Veldu andlag (choose an object):</h2>
         <table id="objlist"></table></div>
         <div class="container" id="timi" hidden></div>
         <div class="container" id="stadur" hidden></div>
-        <div class="container" id="result"><table id="strfinal"></table><button id="reset">Reset</button></div>
+        <div class="container" id="result"><table id="strfinal"></table></div>
         
     </div>
 
+ </section>
+ 
 
-    <!-- End your code here -->
-<script type="text/javascript" src="js/script.js"></script>
+       
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
 </body>
-
+<script src="script.js"></script>
 </html>
