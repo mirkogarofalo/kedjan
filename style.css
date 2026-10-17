@@ -360,7 +360,6 @@ float: right;
     }
 
     .dialogwin p {
-      max-width: 1000px;
       color: rgba(0, 0, 0, 0.82);
       line-height: 1.6;
     }

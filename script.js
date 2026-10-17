@@ -19,6 +19,10 @@ const adjObjListElement = document.getElementById("adjobjlist");
 const sentenceElement = document.getElementById("strfinal");
 const resetElement = document.getElementById("reset");
 const aveElement = document.getElementById("ave");
+const aboutElement = document.getElementById("textabout");
+const instrElement = document.getElementById("textinstr");
+const resultElement = document.getElementById("result");
+let last;
 let pasttense = 0;
 
 let resultv = "";
@@ -545,7 +549,7 @@ function showObjectSelector() {
 
 
 function showObjectOrSubjectSelector(element) {
-    sentenceElement.style.display = "none";
+    resultElement.style.display = "none";
     element.style.display = "block";
 }
 
@@ -640,7 +644,7 @@ let descrcaseobj = "";
 let strtense = "";
 let tenseindicator = "";
 let stringprep = "";
-sentenceElement.style.display = "block";
+resultElement.style.display = "block";
 sentenceElement.innerHTML = "";
 if (artsubj == 1 && appliedartsubj == 0) {
 resultsubj[0] = addartsubj();
@@ -1005,7 +1009,7 @@ applyverb();
 }
 
 function recalcsubj() {
-    sentenceElement.style.display = "none";
+    resultElement.style.display = "none";
     subjectElement.style.display = "block";
 
     createNounList(
@@ -1016,7 +1020,7 @@ function recalcsubj() {
 
 
 function recalcobj() {
-    sentenceElement.style.display = "none";
+    resultElement.style.display = "none";
     objectElement.style.display = "block";
 
     createNounList(
@@ -1026,7 +1030,7 @@ function recalcobj() {
 }
 
 function recalcadjsubj() {
-    sentenceElement.style.display = "none";
+    resultElement.style.display = "none";
     adjSubjElement.style.display = "block";
 
     createAdjList(
@@ -1036,7 +1040,7 @@ function recalcadjsubj() {
 }
 
 function recalcadjobj() {
-    sentenceElement.style.display = "none";
+    resultElement.style.display = "none";
     adjObjElement.style.display = "block";
 
     createAdjList(
@@ -1046,7 +1050,7 @@ function recalcadjobj() {
 }
 
 function addadjsubj() {
-    sentenceElement.style.display = "none";
+    resultElement.style.display = "none";
     adjSubjElement.style.display = "block";
 
     createAdjList(
@@ -1056,7 +1060,7 @@ function addadjsubj() {
 }
 
 function addaux() {
-    sentenceElement.style.display = "none";
+    resultElement.style.display = "none";
     auxElement.style.display = "block";
 
     createAuxList(
@@ -1066,7 +1070,7 @@ function addaux() {
 }
 
 function addadjobj() {
-    sentenceElement.style.display = "none";
+    resultElement.style.display = "none";
     adjObjElement.style.display = "block";
 
     createAdjList(
@@ -1076,7 +1080,7 @@ function addadjobj() {
 }
 
 function recalcaux() {
-    sentenceElement.style.display = "none";
+    resultElement.style.display = "none";
     auxElement.style.display = "block";
 
     createAuxList(
@@ -1086,7 +1090,7 @@ function recalcaux() {
 }
 
 function recalcvb() {
-    sentenceElement.style.display = "none";
+    resultElement.style.display = "none";
     subjectElement.style.display = "none";
     objectElement.style.display = "none";
     verbElement.style.display = "block";
@@ -1134,11 +1138,90 @@ function calcadjformweak(adjectivearray, noun, noungender, casenoun) {
     return [x, noun];
 }
 
+function showabout() {
+const section = document.querySelector("section");
+last = lastVisibleDiv(section);
+console.log(last);
 subjectElement.style.display = "none";
 objectElement.style.display = "none";
-sentenceElement.style.display = "none";
 adjSubjElement.style.display = "none";
 adjObjElement.style.display = "none";
 auxElement.style.display = "none";
+aboutElement.style.display = "block";
+instrElement.style.display = "none";
+verbElement.style.display = "none";
+resultElement.style.display = "none";
+}
+
+function showinstr() {
+const section = document.querySelector("section");
+last = lastVisibleDiv(section);
+console.log(last);
+subjectElement.style.display = "none";
+objectElement.style.display = "none";
+adjSubjElement.style.display = "none";
+adjObjElement.style.display = "none";
+auxElement.style.display = "none";
+aboutElement.style.display = "none";
+verbElement.style.display = "none";
+resultElement.style.display = "none";
+instrElement.style.display = "block";
+}
+
+function hideabout() {
+subjectElement.style.display = "none";
+objectElement.style.display = "none";
+adjSubjElement.style.display = "none";
+adjObjElement.style.display = "none";
+auxElement.style.display = "none";
+aboutElement.style.display = "none";
+instrElement.style.display = "none";
+verbElement.style.display = "none";
+resultElement.style.display = "none";
+last.style.display = "block";
+}
+
+function hideinstr() {
+subjectElement.style.display = "none";
+objectElement.style.display = "none";
+adjSubjElement.style.display = "none";
+adjObjElement.style.display = "none";
+auxElement.style.display = "none";
+aboutElement.style.display = "none";
+instrElement.style.display = "none";
+verbElement.style.display = "none";
+resultElement.style.display = "none";
+last.style.display = "block";
+}
+
+function lastVisibleDiv(section) {
+  const visibleDivs = [...section.querySelectorAll("div")].filter(div => {
+    const rect = div.getBoundingClientRect();
+    const style = getComputedStyle(div);
+
+    return (
+      rect.width > 0 &&
+      rect.height > 0 &&
+      rect.bottom > 0 &&
+      rect.right > 0 &&
+      rect.top < innerHeight &&
+      rect.left < innerWidth &&
+      style.display !== "none" &&
+      style.visibility !== "hidden" &&
+      Number(style.opacity) > 0
+    );
+  });
+
+  return visibleDivs.at(-1) ?? null; // last in DOM order
+}
+
+subjectElement.style.display = "none";
+objectElement.style.display = "none";
+resultElement.style.display = "none";
+adjSubjElement.style.display = "none";
+adjObjElement.style.display = "none";
+auxElement.style.display = "none";
+aboutElement.style.display = "none";
+instrElement.style.display = "none";
 
 generateVerbList();

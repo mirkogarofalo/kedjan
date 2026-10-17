@@ -18,9 +18,19 @@
       <div class="menu-label">Menu</div>
 
       <nav class="nav">
-        <a href="#" class="active">
-          <span class="nav-icon">?</span>
+        <a class="active" onclick="showabout()">
+          <span class="nav-icon">1</span>
           <span>About</span>
+        </a>
+        
+         <a class="active" onclick="showinstr()">
+          <span class="nav-icon">2</span>
+          <span>Instructions</span>
+        </a>
+        
+         <a href="https://islenskutol.is" class="active">
+          <span class="nav-icon">3</span>
+          <span>Homepage</span>
         </a>
       </nav>
 
@@ -75,10 +85,27 @@
         <div class="container" id="stadur" hidden></div>
         <div class="container" id="result"><table id="strfinal"></table></div>
         
+         <div class="container" id="textabout">
+  <h2>About</h2>
+  <p>Mirko Garofalo is an adjunct lecturer in Icelandic as a second language at the University of Iceland. He has been teaching Icelandic for over a decade and is a PhD in Icelandic linguistics. His main fields of interest are syntax, morphology, teaching Icelandic as a second language and computer-assisted language learning.</p><br>
+  <button class="menubutton" onclick="hideabout()">Close</button>
+  </div>
+  
+  <div class="container" id="textinstr">
+  <h2>Instructions</h2>
+  <p><i>Keðjan</i> ‘the chain’ is a web app that helps learners in Icelandic as a second language to gain some insights into the sentence structure, and shows in particular how words affect each other in relation to case, gender and number. The interface shows at the very beginning a dialogue window, asking to choose three items from a list: firstly, the user is ask to choose a verb; then, a new request appears for choosing a subject; lastly, an object must be selected. At that point, a basic sentence structure with subject, verb and object will be formed.</p><br>
+  <p>After the sentence is formed, the user can change multiple parameters of the sentence:</p>
+  <p>- If the user wants to change any item of subject, the verb or the object, they just have to click on the relevant word and choose a new item from the dialogue window.</p>
+  <p>- If the user wants to add an adjective to the subject and/or the object, they can click on the button <b>+lo.</b> and select an adjective. To remove it afterwards, one can click on the button <b>-lo.</b></p>
+  <p>- To change the tense of the verb, one simply has to click on <b>þátíð</b> to obtain the past tense form from a present tense, or <b>nútíð</b> for the opposite.</p>
+  <p>- To add an auxiliary or modal verb like <i>ætla</i> ‘intend to’, <i>vera að</i> ‘be doing sthg.’, the user can click on <b>+aux</b> and choose a verb. To remove it, one can click on <b>-aux.</b></p><br>
+  <p>All the changes taking place in the sentence will be shown with a transition.</p><br>
+  <p>Under the words forming the sentence, it is also possible to see the main case of the subject and the object and the main tense of the finite verb.</p><br>
+  <button class="menubutton" onclick="hideinstr()">Close</button>
+  </div>
     </div>
 
  </section>
- 
 
        
           </div>
