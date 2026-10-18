@@ -1,2 +1,2 @@
-# Keðjan - Interactive sentence builder for Icelandic
+# <img src="kedjan.png"> Keðjan - Interactive sentence builder for Icelandic
 Keðjan ‘the chain’ is an interactive sentence builder for learners of Icelandic. Users can create a sentence by choosing on their own a subject, a verb and an object and can edit the sentence by adding or removing a definite article, an adjective, an auxiliary or modal verb, and also by changing the subject, verb and object. Users can see how any change impacts the sentence at every turn. The purpose of this webapp is to help students to understand and gain more insight into how the Icelandic sentence structure functions.
