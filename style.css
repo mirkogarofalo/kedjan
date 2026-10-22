@@ -411,12 +411,14 @@ float: right;
     }
     
     .caseinfo {
-    background-color: #f5f346;
+    background-color: #054634;
+    color: #fff;
     display: inline-block;
     padding: 4px 8px 4px 8px;
     border-radius: 6px;
     font-variant-caps: small-caps;
-    margin: 10px;
+    margin-bottom: 10pt;
+    font-size: 13px;
     }
     
     .menubutton {
@@ -424,7 +426,7 @@ float: right;
       border: 1px solid var(--border);
       border-radius: 10px;
       background-color: #fff;
-      font-size: 18px;
+      font-size: 16px;
       font-weight: bold;
       display: inline-block;
       cursor: pointer;
@@ -435,7 +437,7 @@ float: right;
       border: 1px solid var(--border);
       border-radius: 10px;
       background-color: #888;
-      font-size: 18px;
+      font-size: 16px;
       font-weight: bold;
     }
     
@@ -446,6 +448,56 @@ float: right;
 .menubutton-word.is-changing {
   animation: word-change-in 1100ms ease both;
 }
+
+  .menubuttonf {
+      padding: 8px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background-color: #fff;
+      font-size: 14px;
+      font-weight: bold;
+      display: inline-block;
+      cursor: pointer;
+    }
+    
+    .menubuttonf:hover {
+      padding: 8px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background-color: #888;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+  .openbin {
+      padding: 4px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background-color: var(--primary-dark);
+      font-size: 13px;
+      display: inline-block;
+      cursor: pointer;
+    }
+    
+    .openbin:hover {
+      padding: 4px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background-color: #dddd46;
+      font-size: 13px;
+    }
+
+#strfinal tr:nth-child(4){
+ border-top: 1px solid #ccc;
+ height: 45pt;
+}
+
+#strfinal tr:last-child{
+ height: 60pt;
+ vertical-align: top;
+ border-bottom: 1px dotted #fff;
+}
+
 
 @keyframes word-change-in {
   0% {

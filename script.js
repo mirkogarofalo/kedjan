@@ -22,6 +22,9 @@ const aveElement = document.getElementById("ave");
 const aboutElement = document.getElementById("textabout");
 const instrElement = document.getElementById("textinstr");
 const resultElement = document.getElementById("result");
+const binElement = document.getElementById("bin");
+const titbinElement = document.getElementById("tat");
+const closebinElement = document.getElementById("closetablebin");
 let last;
 let pasttense = 0;
 
@@ -44,6 +47,8 @@ let selectedadjObj = null;
 let isThereObjAdj = 0;
 let isThereAux = 0;
 let selectedAux = null;
+let switchnumber = 0;
+let switchnumber1 = 0;
 
 let artsubj = 0;
 let artobj = 0;
@@ -87,39 +92,39 @@ const nouns = [
     ["ég", "mig", "mér", "mín", "m", 0, "f"],
     ["þú", "þig", "þér", "þín", "m", 1, "f"],
     ["hann", "hann", "honum", "hans", "m", 2, "f"],
-    ["hundur", "hund", "hundi", "hunds", "m", 2, "n"],
+    ["hundur", "hund", "hundi", "hunds", "m", 2, "n", "hundar", "hunda", "hundum", "hunda"],
     ["við", "okkur", "okkur", "okkar", "m", 3, "f"],
-    ["kennari", "kennara", "kennara", "kennara", "m", 2, "n"],
-    ["bók", "bók", "bók", "bókar", "f", 2, "n"],
-    ["mynd", "mynd", "mynd", "myndar", "f", 2, "n"],
-    ["kaka", "köku", "köku", "köku", "f", 2, "n"],
-    ["samloka", "samloku", "samloku", "samloku", "f", 2, "n"],
+    ["kennari", "kennara", "kennara", "kennara", "m", 2, "n", "kennarar", "kennara", "kennurum", "kennara"],
+    ["bók", "bók", "bók", "bókar", "f", 2, "n", "bækur", "bækur", "bókum", "bóka"],
+    ["mynd", "mynd", "mynd", "myndar", "f", 2, "n", "myndir", "myndir", "myndum", "mynda"],
+    ["kaka", "köku", "köku", "köku", "f", 2, "n", "kökur", "kökur", "kökum", "kakna"],
+    ["samloka", "samloku", "samloku", "samloku", "f", 2, "n", "samlokur", "samloka", "samlokum", "samloka"],
     ["þið", "ykkur", "ykkur", "ykkar", "m", 4, "f"],
-    ["vatn", "vatn", "vatni", "vatns", "n", 2, "n"],
-    ["safi", "safa", "safa", "safa", "m", 2, "n"],
-    ["bjór", "bjór", "bjóri", "bjórs", "m", 2, "n"],
-    ["tölva", "tölvu", "tölvu", "tölvu", "f", 2, "n"],
-    ["nemandi", "nemanda", "nemanda", "nemanda", "m", 2, "n"],
-    ["kokkur", "kokk", "kokki", "kokks", "m", 2, "n"],
-     ["leikkona", "leikkonu", "leikkonu", "leikkonu", "f", 2, "n"],
-     ["hamborgari", "hamborgara", "hamborgara", "hamborgara", "m", 2, "n"],
+    ["vatn", "vatn", "vatni", "vatns", "n", 2, "n", "vötn", "vötn", "vötnum", "vatna"],
+    ["safi", "safa", "safa", "safa", "m", 2, "n", "safar", "safa", "söfum", "safa"],
+    ["bjór", "bjór", "bjóri", "bjórs", "m", 2, "n", "bjórar", "bjóra", "bjórum", "bjóra"],
+    ["tölva", "tölvu", "tölvu", "tölvu", "f", 2, "n", "tölvur", "tölva", "tölvum", "tölva"],
+    ["nemandi", "nemanda", "nemanda", "nemanda", "m", 2, "n", "nemendur", "nemendur", "nemendum", "nemenda"],
+    ["kokkur", "kokk", "kokki", "kokks", "m", 2, "n", "kokkar", "kokka", "kokkum", "kokka"],
+     ["leikkona", "leikkonu", "leikkonu", "leikkonu", "f", 2, "n", "leikkonur", "leikkonur", "leikkonum", "leikkvenna"],
+     ["hamborgari", "hamborgara", "hamborgara", "hamborgara", "m", 2, "n", "hamborgarar", "hamborgara", "hamborgurum", "hamborgara"],
      ["mjólk", "mjólk", "mjólk", "mjólkur", "f", 2, "n"],
-     ["fjölskylda", "fjölskyldu", "fjölskyldu", "fjölskyldu", "f", 2, "n"],
+     ["fjölskylda", "fjölskyldu", "fjölskyldu", "fjölskyldu", "f", 2, "n", "fjölskyldur", "fjölskyldur", "fjölskyldum", "fjölskyldna"],
       ["tónlist", "tónlist", "tónlist", "tónlistar", "f", 2, "n"],
-      ["saga", "sögu", "sögu", "sögu", "f", 2, "n"],
-      ["barn", "barn", "barni", "barns", "n", 2, "n"],
+      ["saga", "sögu", "sögu", "sögu", "f", 2, "n", "sögur", "sögur", "sögum", "sagna"],
+      ["barn", "barn", "barni", "barns", "n", 2, "n", "börn", "börn", "börnum", "barna"],
 ];
 
 const adjectivesstrong = [
-    ["fallegur", "fallegan", "fallegum", "fallegs", "falleg", "fallega", "fallegri", "fallegrar", "fallegt", "fallegt", "fallegu", "fallegs"],
-    ["hvítur", "hvítan", "hvítum", "hvíts", "hvít", "hvíta", "hvítri", "hvítrar", "hvítt", "hvítt", "hvítu", "hvíts"],
-    ["vondur", "vondan", "vondum", "vonds", "vond", "vonda", "vondri", "vondrar", "vont", "vont", "vondu", "vonds"],
-    ["íslenskur", "íslenskan", "íslenskum", "íslensks", "íslensk", "íslenska", "íslenskri", "íslenskrar", "íslenskt", "íslenskt", "íslensku", "íslensks"],
-    ["skemmtilegur", "skemmtilegan", "skemmtilegum", "skemmtilegs", "skemmtileg", "skemmtilega", "skemmtilegri", "skemmtilegrar", "skemmtilegt", "skemmtilegt", "skemmtilegu", "skemmtilegs"],
-    ["góður", "góðan", "góðum", "góðs", "góð", "góða", "góðri", "góðrar", "gott", "gott", "góðu", "góðs"],
-    ["gamall", "gamlan", "gömlum", "gamals", "gömul", "gamla", "gamalli", "gamallar", "gamalt", "gamalt", "gömlu", "gamals"],
-    ["nýr", "nýjan", "nýjum", "nýs", "ný", "nýja", "nýrri", "nýrrar", "nýtt", "nýtt", "nýju", "nýs"],
-    ["stór", "stóran", "stórum", "stórs", "stór", "stóra", "stórri", "stórrar", "stórt", "stórt", "stóru", "stórs"]
+    ["fallegur", "fallegan", "fallegum", "fallegs", "falleg", "fallega", "fallegri", "fallegrar", "fallegt", "fallegt", "fallegu", "fallegs","fallegir","fallega","fallegum","fallegra","fallegar","fallegar","fallegum","fallegra","falleg","falleg","fallegum","fallegra"],
+    ["hvítur", "hvítan", "hvítum", "hvíts", "hvít", "hvíta", "hvítri", "hvítrar", "hvítt", "hvítt", "hvítu", "hvíts","hvítir","hvíta","hvítum","hvítra","hvítar","hvítar","hvítum","hvítra","hvít","hvít","hvítum","hvítra"],
+    ["vondur", "vondan", "vondum", "vonds", "vond", "vonda", "vondri", "vondrar", "vont", "vont", "vondu", "vonds","vondir","vonda","vondum","vondra","vondar","vondar","vondum","vondra","vond","vond","vondum","vondra"],
+    ["íslenskur", "íslenskan", "íslenskum", "íslensks", "íslensk", "íslenska", "íslenskri", "íslenskrar", "íslenskt", "íslenskt", "íslensku", "íslensks","íslenskir","íslenska","íslenskum","íslenskra","íslenskar","íslenskar","íslenskum","íslenskra","íslensk","íslensk","íslenskum","íslenskra"],
+    ["skemmtilegur", "skemmtilegan", "skemmtilegum", "skemmtilegs", "skemmtileg", "skemmtilega", "skemmtilegri", "skemmtilegrar", "skemmtilegt", "skemmtilegt", "skemmtilegu", "skemmtilegs","skemmtilegir","skemmtilega","skemmtilegum","skemmtilegra","skemmtilegar","skemmtilegar","skemmtilegum","skemmtilegra","skemmtileg","skemmtileg","skemmtilegum","skemmtilegra"],
+    ["góður", "góðan", "góðum", "góðs", "góð", "góða", "góðri", "góðrar", "gott", "gott", "góðu", "góðs","góðir","góða","góðum","góðra","góðar","góðar","góðum","góðra","góð","góð","góðum","góðra"],
+    ["gamall", "gamlan", "gömlum", "gamals", "gömul", "gamla", "gamalli", "gamallar", "gamalt", "gamalt", "gömlu", "gamals","gamlir","gamla","gömlum","gamalla","gamlar","gamlar","gömlum","gamalla","gömul","gömul","gömlum","gamalla"],
+    ["nýr", "nýjan", "nýjum", "nýs", "ný", "nýja", "nýrri", "nýrrar", "nýtt", "nýtt", "nýju", "nýs","nýir","nýja","nýjum","nýrra","nýjar","nýjar","nýjum","nýrra","ný","ný","nýjum","nýrra"],
+    ["stór", "stóran", "stórum", "stórs", "stór", "stóra", "stórri", "stórrar", "stórt", "stórt", "stóru", "stórs","stórir","stóra","stórum","stórra","stórar","stórar","stórum","stórra","stór","stór","stórum","stórra"]
 ];
 
 const adjectivesweak = [
@@ -148,13 +153,661 @@ const verbn5 = ["", "ð", "", "um", "ið"];
 const verbn6 = ["", "t", "", "um", "ið"];
 const verbn7 = ["", "tt", "", "um", "ið"];
 
+const verbforms = ["GM-FH-NT-1P-ET", "GM-FH-NT-2P-ET", "GM-FH-NT-3P-ET","GM-FH-NT-1P-FT", "GM-FH-NT-2P-FT", "GM-FH-NT-3P-FT","GM-FH-ÞT-1P-ET", "GM-FH-ÞT-2P-ET", "GM-FH-ÞT-3P-ET","GM-FH-ÞT-1P-FT", "GM-FH-ÞT-2P-FT", "GM-FH-ÞT-3P-FT"];
+
 const verbt1 = ["i","ir","i","um","uð","u"];
 const verbt2 = ["","st","","um","uð","u"];
 const verbt3 = ["","t","","um","uð","u"];
 
-const art1 = ["inn","inn","inum","ins"];
-const art2 = ["in","ina","inni","innar"];
-const art3 = ["ið","ið","inu","ins"];
+const art1 = ["inn","inn","inum","ins","nir","na","num","nna"];
+const art2 = ["in","ina","inni","innar","nar","nar","num","nna"];
+const art3 = ["ið","ið","inu","ins","in","in","num","nna"];
+
+async function getNounBin(lemma, targetCase) {
+let url;
+if (lemma == "saga") {
+    url = 'https://bin.arnastofnun.is/api/ord/943f39cd50e2e17412f2ca9526373d40';
+    } else {
+    url = 'https://bin.arnastofnun.is/api/ord/no/' + encodeURIComponent(lemma);
+    }
+
+    try {
+        const response = await fetch(url, {
+            headers: { 'Accept': 'application/json' }
+        });
+
+        if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
+
+        const data = await response.json();
+
+        if (!Array.isArray(data) || data.length === 0 || !data[0].bmyndir) {
+            return lemma;
+        }
+
+        const paradigm = data[0].bmyndir;
+
+        const match = paradigm.find(item => {
+            const tag = item.g || "";
+            return tag.includes(targetCase);
+        });
+        return match.b;
+
+    } catch (error) {
+        console.error("Error fetching from BÍN:", error);
+        return "-";
+    }
+}
+
+async function getVerbBin(lemma, targetForm) {
+let url;
+    if (lemma == "bera") {
+    url = 'https://bin.arnastofnun.is/api/ord/51ba23638c3764ca4b6a75e0bbeae71a';
+    } else {
+    url = 'https://bin.arnastofnun.is/api/ord/so/' + encodeURIComponent(lemma);
+    }
+    try {
+        const response = await fetch(url, {
+            headers: { 'Accept': 'application/json' }
+        });
+
+        if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
+
+        const data = await response.json();
+
+        if (!Array.isArray(data) || data.length === 0 || !data[0].bmyndir) {
+            return lemma;
+        }
+
+        const paradigm = data[0].bmyndir;
+
+        const match = paradigm.find(item => {
+            const tag = item.g || "";
+            return tag.includes(targetForm);
+        });
+        return match.b;
+
+    } catch (error) {
+        console.error("Error fetching from BÍN:", error);
+        return "-";
+    }
+}
+
+async function getAdjBin(lemma, targetForm) {
+let url;
+    //if (lemma == "bera") {
+    //} else {
+    url = 'https://bin.arnastofnun.is/api/ord/lo/' + encodeURIComponent(lemma);
+    //}
+    try {
+        const response = await fetch(url, {
+            headers: { 'Accept': 'application/json' }
+        });
+
+        if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
+
+        const data = await response.json();
+
+        if (!Array.isArray(data) || data.length === 0 || !data[0].bmyndir) {
+            return lemma;
+        }
+
+        const paradigm = data[0].bmyndir;
+
+        const match = paradigm.find(item => {
+            const tag = item.g || "";
+            return tag.includes(targetForm);
+        });
+        return match.b;
+
+    } catch (error) {
+        console.error("Error fetching from BÍN:", error);
+        return "-";
+    }
+}
+
+async function genTableBinSubjNoun() {
+binElement.innerHTML = "";
+const row = document.querySelector("#strfinal tr:last-child");
+row.style.borderBottom = "1px dotted #ddd";
+titbinElement.innerHTML = "Noun <i>" + nouns[selectedSubject][0] + "</i> on BÍN";
+closebinElement.innerHTML = "<button class='menubutton' onclick='deactbin()'>Close</button>";
+for (let i = 0; i < 5; i++) {
+const tableRow = binElement.appendChild(
+            document.createElement("tr")
+        );
+const firstCell = tableRow.appendChild(
+            document.createElement("td")
+        );
+const secondCell = tableRow.appendChild(
+            document.createElement("td")
+        );
+const thirdCell = tableRow.appendChild(
+            document.createElement("td")
+        );
+const fourthCell = tableRow.appendChild(
+            document.createElement("td")
+        );
+const fifthCell = tableRow.appendChild(
+            document.createElement("td")
+        );
+if (i == 0) {
+    firstCell.innerHTML = "Case";
+    secondCell.innerHTML = "Singular without art.";
+    thirdCell.innerHTML = "Plural without art.";
+     fourthCell.innerHTML = "Singular with art.";
+      fifthCell.innerHTML = "Plural with art.";
+} 
+if (i == 1) {
+    firstCell.innerHTML = "Nf.";
+    secondCell.innerHTML = await getNounBin(nouns[selectedSubject][0], "NFET");
+    thirdCell.innerHTML = await getNounBin(nouns[selectedSubject][0], "NFFT");
+     fourthCell.innerHTML = await getNounBin(nouns[selectedSubject][0], "NFETgr");
+      fifthCell.innerHTML = await getNounBin(nouns[selectedSubject][0], "NFFTgr");
+}
+if (i == 2) {
+    firstCell.innerHTML = "Þf.";
+    secondCell.innerHTML = await getNounBin(nouns[selectedSubject][0], "ÞFET");
+    thirdCell.innerHTML = await getNounBin(nouns[selectedSubject][0], "ÞFFT");
+     fourthCell.innerHTML = await getNounBin(nouns[selectedSubject][0], "ÞFETgr");
+      fifthCell.innerHTML = await getNounBin(nouns[selectedSubject][0], "ÞFFTgr");
+}
+if (i == 3) {
+    firstCell.innerHTML = "Þgf.";
+    secondCell.innerHTML = await getNounBin(nouns[selectedSubject][0], "ÞGFET");
+    thirdCell.innerHTML = await getNounBin(nouns[selectedSubject][0], "ÞGFFT");
+     fourthCell.innerHTML = await getNounBin(nouns[selectedSubject][0], "ÞGFETgr");
+      fifthCell.innerHTML = await getNounBin(nouns[selectedSubject][0], "ÞGFFTgr");
+}
+if (i == 4) {
+    firstCell.innerHTML = "Ef.";
+    secondCell.innerHTML = await getNounBin(nouns[selectedSubject][0], "EFET");
+    thirdCell.innerHTML = await getNounBin(nouns[selectedSubject][0], "EFFT");
+     fourthCell.innerHTML = await getNounBin(nouns[selectedSubject][0], "EFETgr");
+      fifthCell.innerHTML = await getNounBin(nouns[selectedSubject][0], "EFFTgr");
+}
+}
+}
+
+async function genTableBinObjAdjVeik() {
+binElement.innerHTML = "";
+const row = document.querySelector("#strfinal tr:last-child");
+row.style.borderBottom = "1px dotted #ddd";
+titbinElement.innerHTML = "Adjective <i>" + adjectivesstrong[selectedadjObj][0] + "</i> on BÍN - Veik beyging";
+closebinElement.innerHTML = "<button class='menubutton' onclick='deactbin()'>Close</button> <button class='menubutton' onclick='genTableBinObjAdj()'>Sterk beyging</button>";
+for (let i = 0; i < 6; i++) {
+const tableRow = binElement.appendChild(
+            document.createElement("tr")
+        );
+const firstCell = tableRow.appendChild(
+            document.createElement("td")
+        );
+const secondCell = tableRow.appendChild(
+            document.createElement("td")
+        );
+const thirdCell = tableRow.appendChild(
+            document.createElement("td")
+        );
+const fourthCell = tableRow.appendChild(
+            document.createElement("td")
+        );
+const fifthCell = tableRow.appendChild(
+            document.createElement("td")
+        );
+const sixthCell = tableRow.appendChild(
+            document.createElement("td")
+        );
+const seventhCell = tableRow.appendChild(
+            document.createElement("td")
+        );
+if (i == 0) {
+    firstCell.innerHTML = "Case";
+    secondCell.innerHTML = "";
+    thirdCell.innerHTML = "Singular";
+     fourthCell.innerHTML = "";
+      fifthCell.innerHTML = "";
+      sixthCell.innerHTML = "Plural";
+      seventhCell.innerHTML = "";
+} 
+if (i == 1) {
+    firstCell.innerHTML = "";
+    secondCell.innerHTML = "Masc";
+    thirdCell.innerHTML = "Fem";
+     fourthCell.innerHTML = "Neu";
+      fifthCell.innerHTML = "Masc";
+      sixthCell.innerHTML = "Fem";
+      seventhCell.innerHTML = "Neu";
+} 
+if (i == 2) {
+    firstCell.innerHTML = "Nf.";
+    secondCell.innerHTML = adjectivesweak[selectedadjObj][0];
+    thirdCell.innerHTML = adjectivesweak[selectedadjObj][1];
+     fourthCell.innerHTML = adjectivesweak[selectedadjObj][1];
+      fifthCell.innerHTML = adjectivesweak[selectedadjObj][2];
+      sixthCell.innerHTML = adjectivesweak[selectedadjObj][2];
+      seventhCell.innerHTML = adjectivesweak[selectedadjObj][2];
+}
+if (i == 3) {
+    firstCell.innerHTML = "Þf.";
+    secondCell.innerHTML = adjectivesweak[selectedadjObj][1];
+    thirdCell.innerHTML = adjectivesweak[selectedadjObj][2];
+     fourthCell.innerHTML = adjectivesweak[selectedadjObj][1];
+      fifthCell.innerHTML = adjectivesweak[selectedadjObj][2];
+      sixthCell.innerHTML = adjectivesweak[selectedadjObj][2];
+      seventhCell.innerHTML = adjectivesweak[selectedadjObj][2];
+}
+if (i == 4) {
+    firstCell.innerHTML = "Þgf.";
+  secondCell.innerHTML = adjectivesweak[selectedadjObj][1];
+    thirdCell.innerHTML = adjectivesweak[selectedadjObj][2];
+     fourthCell.innerHTML = adjectivesweak[selectedadjObj][1];
+      fifthCell.innerHTML = adjectivesweak[selectedadjObj][2];
+      sixthCell.innerHTML = adjectivesweak[selectedadjObj][2];
+      seventhCell.innerHTML = adjectivesweak[selectedadjObj][2];
+}
+if (i == 5) {
+    firstCell.innerHTML = "Ef.";
+  secondCell.innerHTML = adjectivesweak[selectedadjObj][1];
+    thirdCell.innerHTML = adjectivesweak[selectedadjObj][2];
+     fourthCell.innerHTML = adjectivesweak[selectedadjObj][1];
+      fifthCell.innerHTML = adjectivesweak[selectedadjObj][2];
+      sixthCell.innerHTML = adjectivesweak[selectedadjObj][2];
+      seventhCell.innerHTML = adjectivesweak[selectedadjObj][2];
+}
+}
+}
+
+async function genTableBinObjAdj() {
+binElement.innerHTML = "";
+const row = document.querySelector("#strfinal tr:last-child");
+row.style.borderBottom = "1px dotted #ddd";
+titbinElement.innerHTML = "Adjective <i>" + adjectivesstrong[selectedadjObj][0] + "</i> on BÍN - Sterk beyging";
+closebinElement.innerHTML = "<button class='menubutton' onclick='deactbin()'>Close</button> <button class='menubutton' onclick='genTableBinObjAdjVeik()'>Veik beyging</button>";
+for (let i = 0; i < 6; i++) {
+const tableRow = binElement.appendChild(
+            document.createElement("tr")
+        );
+const firstCell = tableRow.appendChild(
+            document.createElement("td")
+        );
+const secondCell = tableRow.appendChild(
+            document.createElement("td")
+        );
+const thirdCell = tableRow.appendChild(
+            document.createElement("td")
+        );
+const fourthCell = tableRow.appendChild(
+            document.createElement("td")
+        );
+const fifthCell = tableRow.appendChild(
+            document.createElement("td")
+        );
+const sixthCell = tableRow.appendChild(
+            document.createElement("td")
+        );
+const seventhCell = tableRow.appendChild(
+            document.createElement("td")
+        );
+if (i == 0) {
+    firstCell.innerHTML = "Case";
+    secondCell.innerHTML = "";
+    thirdCell.innerHTML = "Singular";
+     fourthCell.innerHTML = "";
+      fifthCell.innerHTML = "";
+      sixthCell.innerHTML = "Plural";
+      seventhCell.innerHTML = "";
+} 
+if (i == 1) {
+    firstCell.innerHTML = "";
+    secondCell.innerHTML = "Masc";
+    thirdCell.innerHTML = "Fem";
+     fourthCell.innerHTML = "Neu";
+      fifthCell.innerHTML = "Masc";
+      sixthCell.innerHTML = "Fem";
+      seventhCell.innerHTML = "Neu";
+} 
+if (i == 2) {
+    firstCell.innerHTML = "Nf.";
+    secondCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjObj][0], "FSB-KK-NFET");
+    thirdCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjObj][0], "FSB-KVK-NFET");
+     fourthCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjObj][0], "FSB-HK-NFET");
+      fifthCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjObj][0], "FSB-KK-NFFT");
+      sixthCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjObj][0], "FSB-KVK-NFFT");
+      seventhCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjObj][0], "FSB-HK-NFFT");
+}
+if (i == 3) {
+    firstCell.innerHTML = "Þf.";
+      secondCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjObj][0], "FSB-KK-ÞFET");
+    thirdCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjObj][0], "FSB-KVK-ÞFET");
+     fourthCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjObj][0], "FSB-HK-ÞFET");
+      fifthCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjObj][0], "FSB-KK-ÞFFT");
+      sixthCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjObj][0], "FSB-KVK-ÞFFT");
+      seventhCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjObj][0], "FSB-HK-ÞFFT");
+}
+if (i == 4) {
+    firstCell.innerHTML = "Þgf.";
+    secondCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjObj][0], "FSB-KK-ÞGFET");
+    thirdCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjObj][0], "FSB-KVK-ÞGFET");
+     fourthCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjObj][0], "FSB-HK-ÞGFET");
+      fifthCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjObj][0], "FSB-KK-ÞGFFT");
+      sixthCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjObj][0], "FSB-KVK-ÞGFFT");
+      seventhCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjObj][0], "FSB-HK-ÞGFFT");
+}
+if (i == 5) {
+    firstCell.innerHTML = "Ef.";
+      secondCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjObj][0], "FSB-KK-EFET");
+    thirdCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjObj][0], "FSB-KVK-EFET");
+     fourthCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjObj][0], "FSB-HK-EFET");
+      fifthCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjObj][0], "FSB-KK-EFFT");
+      sixthCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjObj][0], "FSB-KVK-EFFT");
+      seventhCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjObj][0], "FSB-HK-EFFT");
+}
+}
+}
+
+async function genTableBinSubjAdjVeik() {
+binElement.innerHTML = "";
+const row = document.querySelector("#strfinal tr:last-child");
+row.style.borderBottom = "1px dotted #ddd";
+titbinElement.innerHTML = "Adjective <i>" + adjectivesstrong[selectedadjSubj][0] + "</i> on BÍN - Veik beyging";
+closebinElement.innerHTML = "<button class='menubutton' onclick='deactbin()'>Close</button> <button class='menubutton' onclick='genTableBinSubjAdj()'>Sterk beyging</button>";
+for (let i = 0; i < 6; i++) {
+const tableRow = binElement.appendChild(
+            document.createElement("tr")
+        );
+const firstCell = tableRow.appendChild(
+            document.createElement("td")
+        );
+const secondCell = tableRow.appendChild(
+            document.createElement("td")
+        );
+const thirdCell = tableRow.appendChild(
+            document.createElement("td")
+        );
+const fourthCell = tableRow.appendChild(
+            document.createElement("td")
+        );
+const fifthCell = tableRow.appendChild(
+            document.createElement("td")
+        );
+const sixthCell = tableRow.appendChild(
+            document.createElement("td")
+        );
+const seventhCell = tableRow.appendChild(
+            document.createElement("td")
+        );
+if (i == 0) {
+    firstCell.innerHTML = "Case";
+    secondCell.innerHTML = "";
+    thirdCell.innerHTML = "Singular";
+     fourthCell.innerHTML = "";
+      fifthCell.innerHTML = "";
+      sixthCell.innerHTML = "Plural";
+      seventhCell.innerHTML = "";
+} 
+if (i == 1) {
+    firstCell.innerHTML = "";
+    secondCell.innerHTML = "Masc";
+    thirdCell.innerHTML = "Fem";
+     fourthCell.innerHTML = "Neu";
+      fifthCell.innerHTML = "Masc";
+      sixthCell.innerHTML = "Fem";
+      seventhCell.innerHTML = "Neu";
+} 
+if (i == 2) {
+    firstCell.innerHTML = "Nf.";
+    secondCell.innerHTML = adjectivesweak[selectedadjSubj][0];
+    thirdCell.innerHTML = adjectivesweak[selectedadjSubj][1];
+     fourthCell.innerHTML = adjectivesweak[selectedadjSubj][1];
+      fifthCell.innerHTML = adjectivesweak[selectedadjSubj][2];
+      sixthCell.innerHTML = adjectivesweak[selectedadjSubj][2];
+      seventhCell.innerHTML = adjectivesweak[selectedadjSubj][2];
+}
+if (i == 3) {
+    firstCell.innerHTML = "Þf.";
+    secondCell.innerHTML = adjectivesweak[selectedadjSubj][1];
+    thirdCell.innerHTML = adjectivesweak[selectedadjSubj][2];
+     fourthCell.innerHTML = adjectivesweak[selectedadjSubj][1];
+      fifthCell.innerHTML = adjectivesweak[selectedadjSubj][2];
+      sixthCell.innerHTML = adjectivesweak[selectedadjSubj][2];
+      seventhCell.innerHTML = adjectivesweak[selectedadjSubj][2];
+}
+if (i == 4) {
+    firstCell.innerHTML = "Þgf.";
+    secondCell.innerHTML = adjectivesweak[selectedadjSubj][1];
+    thirdCell.innerHTML = adjectivesweak[selectedadjSubj][2];
+     fourthCell.innerHTML = adjectivesweak[selectedadjSubj][1];
+      fifthCell.innerHTML = adjectivesweak[selectedadjSubj][2];
+      sixthCell.innerHTML = adjectivesweak[selectedadjSubj][2];
+      seventhCell.innerHTML = adjectivesweak[selectedadjSubj][2];
+}
+if (i == 5) {
+    firstCell.innerHTML = "Ef.";
+    secondCell.innerHTML = adjectivesweak[selectedadjSubj][1];
+    thirdCell.innerHTML = adjectivesweak[selectedadjSubj][2];
+     fourthCell.innerHTML = adjectivesweak[selectedadjSubj][1];
+      fifthCell.innerHTML = adjectivesweak[selectedadjSubj][2];
+      sixthCell.innerHTML = adjectivesweak[selectedadjSubj][2];
+      seventhCell.innerHTML = adjectivesweak[selectedadjSubj][2];
+}
+}
+}
+
+async function genTableBinSubjAdj() {
+binElement.innerHTML = "";
+const row = document.querySelector("#strfinal tr:last-child");
+row.style.borderBottom = "1px dotted #ddd";
+titbinElement.innerHTML = "Adjective <i>" + adjectivesstrong[selectedadjSubj][0] + "</i> on BÍN - Sterk beyging";
+closebinElement.innerHTML = "<button class='menubutton' onclick='deactbin()'>Close</button> <button class='menubutton' onclick='genTableBinSubjAdjVeik()'>Veik beyging</button>";
+for (let i = 0; i < 6; i++) {
+const tableRow = binElement.appendChild(
+            document.createElement("tr")
+        );
+const firstCell = tableRow.appendChild(
+            document.createElement("td")
+        );
+const secondCell = tableRow.appendChild(
+            document.createElement("td")
+        );
+const thirdCell = tableRow.appendChild(
+            document.createElement("td")
+        );
+const fourthCell = tableRow.appendChild(
+            document.createElement("td")
+        );
+const fifthCell = tableRow.appendChild(
+            document.createElement("td")
+        );
+const sixthCell = tableRow.appendChild(
+            document.createElement("td")
+        );
+const seventhCell = tableRow.appendChild(
+            document.createElement("td")
+        );
+if (i == 0) {
+    firstCell.innerHTML = "Case";
+    secondCell.innerHTML = "";
+    thirdCell.innerHTML = "Singular";
+     fourthCell.innerHTML = "";
+      fifthCell.innerHTML = "";
+      sixthCell.innerHTML = "Plural";
+      seventhCell.innerHTML = "";
+} 
+if (i == 1) {
+    firstCell.innerHTML = "";
+    secondCell.innerHTML = "Masc";
+    thirdCell.innerHTML = "Fem";
+     fourthCell.innerHTML = "Neu";
+      fifthCell.innerHTML = "Masc";
+      sixthCell.innerHTML = "Fem";
+      seventhCell.innerHTML = "Neu";
+} 
+if (i == 2) {
+    firstCell.innerHTML = "Nf.";
+    secondCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjSubj][0], "FSB-KK-NFET");
+    thirdCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjSubj][0], "FSB-KVK-NFET");
+     fourthCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjSubj][0], "FSB-HK-NFET");
+      fifthCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjSubj][0], "FSB-KK-NFFT");
+      sixthCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjSubj][0], "FSB-KVK-NFFT");
+      seventhCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjSubj][0], "FSB-HK-NFFT");
+}
+if (i == 3) {
+    firstCell.innerHTML = "Þf.";
+      secondCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjSubj][0], "FSB-KK-ÞFET");
+    thirdCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjSubj][0], "FSB-KVK-ÞFET");
+     fourthCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjSubj][0], "FSB-HK-ÞFET");
+      fifthCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjSubj][0], "FSB-KK-ÞFFT");
+      sixthCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjSubj][0], "FSB-KVK-ÞFFT");
+      seventhCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjSubj][0], "FSB-HK-ÞFFT");
+}
+if (i == 4) {
+    firstCell.innerHTML = "Þgf.";
+    secondCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjSubj][0], "FSB-KK-ÞGFET");
+    thirdCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjSubj][0], "FSB-KVK-ÞGFET");
+     fourthCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjSubj][0], "FSB-HK-ÞGFET");
+      fifthCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjSubj][0], "FSB-KK-ÞGFFT");
+      sixthCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjSubj][0], "FSB-KVK-ÞGFFT");
+      seventhCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjSubj][0], "FSB-HK-ÞGFFT");
+}
+if (i == 5) {
+    firstCell.innerHTML = "Ef.";
+      secondCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjSubj][0], "FSB-KK-EFET");
+    thirdCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjSubj][0], "FSB-KVK-EFET");
+     fourthCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjSubj][0], "FSB-HK-EFET");
+      fifthCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjSubj][0], "FSB-KK-EFFT");
+      sixthCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjSubj][0], "FSB-KVK-EFFT");
+      seventhCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjSubj][0], "FSB-HK-EFFT");
+}
+}
+}
+
+async function genTableBinObjNoun() {
+titbinElement.innerHTML = "Noun <i>" + nouns[selectedObject][0] + "</i> on BÍN";
+closebinElement.innerHTML = "<button class='menubutton' onclick='deactbin()'>Close</button>";
+binElement.innerHTML = "";
+const row = document.querySelector("#strfinal tr:last-child");
+row.style.borderBottom = "1px dotted #ddd";
+for (let i = 0; i < 5; i++) {
+const tableRow = binElement.appendChild(
+            document.createElement("tr")
+        );
+const firstCell = tableRow.appendChild(
+            document.createElement("td")
+        );
+const secondCell = tableRow.appendChild(
+            document.createElement("td")
+        );
+const thirdCell = tableRow.appendChild(
+            document.createElement("td")
+        );
+const fourthCell = tableRow.appendChild(
+            document.createElement("td")
+        );
+const fifthCell = tableRow.appendChild(
+            document.createElement("td")
+        );
+if (i == 0) {
+    firstCell.innerHTML = "Case";
+    secondCell.innerHTML = "Singular without art.";
+    thirdCell.innerHTML = "Plural without art.";
+     fourthCell.innerHTML = "Singular with art.";
+      fifthCell.innerHTML = "Plural with art.";
+} 
+if (i == 1) {
+    firstCell.innerHTML = "Nf.";
+    secondCell.innerHTML = await getNounBin(nouns[selectedObject][0], "NFET");
+    thirdCell.innerHTML = await getNounBin(nouns[selectedObject][0], "NFFT");
+     fourthCell.innerHTML = await getNounBin(nouns[selectedObject][0], "NFETgr");
+      fifthCell.innerHTML = await getNounBin(nouns[selectedObject][0], "NFFTgr");
+}
+if (i == 2) {
+    firstCell.innerHTML = "Þf.";
+    secondCell.innerHTML = await getNounBin(nouns[selectedObject][0], "ÞFET");
+    thirdCell.innerHTML = await getNounBin(nouns[selectedObject][0], "ÞFFT");
+     fourthCell.innerHTML = await getNounBin(nouns[selectedObject][0], "ÞFETgr");
+      fifthCell.innerHTML = await getNounBin(nouns[selectedObject][0], "ÞFFTgr");
+}
+if (i == 3) {
+    firstCell.innerHTML = "Þgf.";
+    secondCell.innerHTML = await getNounBin(nouns[selectedObject][0], "ÞGFET");
+    thirdCell.innerHTML = await getNounBin(nouns[selectedObject][0], "ÞGFFT");
+     fourthCell.innerHTML = await getNounBin(nouns[selectedObject][0], "ÞGFETgr");
+      fifthCell.innerHTML = await getNounBin(nouns[selectedObject][0], "ÞGFFTgr");
+}
+if (i == 4) {
+    firstCell.innerHTML = "Ef.";
+    secondCell.innerHTML = await getNounBin(nouns[selectedObject][0], "EFET");
+    thirdCell.innerHTML = await getNounBin(nouns[selectedObject][0], "EFFT");
+     fourthCell.innerHTML = await getNounBin(nouns[selectedObject][0], "EFETgr");
+      fifthCell.innerHTML = await getNounBin(nouns[selectedObject][0], "EFFTgr");
+}
+}
+}
+
+function deactbin() {
+titbinElement.innerHTML = "";
+closebinElement.innerHTML = "";
+binElement.innerHTML = "";
+const row = document.querySelector("#strfinal tr:last-child");
+if (row) {
+row.style.borderBottom = "1px solid #fff";
+}
+}
+
+async function genTableBinVerb() {
+titbinElement.innerHTML = "Verb <i>" + verbs[selectedVerb][0] + "</i> on BÍN";
+closebinElement.innerHTML = "<button class='menubutton' onclick='deactbin()'>Close</button>";
+binElement.innerHTML = "";
+const row = document.querySelector("#strfinal tr:last-child");
+row.style.borderBottom = "1px dotted #ddd";
+for (let i = 0; i < 4; i++) {
+const tableRow = binElement.appendChild(
+            document.createElement("tr")
+        );
+const firstCell = tableRow.appendChild(
+            document.createElement("td")
+        );
+const secondCell = tableRow.appendChild(
+            document.createElement("td")
+        );
+const thirdCell = tableRow.appendChild(
+            document.createElement("td")
+        );
+const fourthCell = tableRow.appendChild(
+            document.createElement("td")
+        );
+const fifthCell = tableRow.appendChild(
+            document.createElement("td")
+        );
+if (i == 0) {
+    firstCell.innerHTML = "Person";
+    secondCell.innerHTML = "Singular present";
+    thirdCell.innerHTML = "Plural present";
+     fourthCell.innerHTML = "Singular past";
+      fifthCell.innerHTML = "Plural past";
+} 
+if (i == 1) {
+    firstCell.innerHTML = "1.ps.";
+    secondCell.innerHTML = await getVerbBin(verbs[selectedVerb][0], verbforms[0]);
+    thirdCell.innerHTML = await getVerbBin(verbs[selectedVerb][0], verbforms[3]);
+     fourthCell.innerHTML = await getVerbBin(verbs[selectedVerb][0], verbforms[6]);
+      fifthCell.innerHTML = await getVerbBin(verbs[selectedVerb][0], verbforms[9]);
+}
+if (i == 2) {
+    firstCell.innerHTML = "2.ps.";
+    secondCell.innerHTML =  await getVerbBin(verbs[selectedVerb][0], verbforms[1]);
+    thirdCell.innerHTML = await getVerbBin(verbs[selectedVerb][0], verbforms[4]);
+     fourthCell.innerHTML =  await getVerbBin(verbs[selectedVerb][0], verbforms[7]);
+      fifthCell.innerHTML = await getVerbBin(verbs[selectedVerb][0], verbforms[10]);
+}
+if (i == 3) {
+    firstCell.innerHTML = "3.ps.";
+    secondCell.innerHTML = await getVerbBin(verbs[selectedVerb][0], verbforms[2]);
+    thirdCell.innerHTML = await getVerbBin(verbs[selectedVerb][0], verbforms[5]);
+     fourthCell.innerHTML = await getVerbBin(verbs[selectedVerb][0], verbforms[8]);
+      fifthCell.innerHTML = await getVerbBin(verbs[selectedVerb][0], verbforms[11]);
+}
+}
+}
 
 function calcverb(infin, firstPersonForm, pers) {
     stofn = infin.substring(0, infin.length - 1);
@@ -284,20 +937,61 @@ function changecharcheck(word) {
     return word;
 }
 
+function subjplur() {
+switchnumber = 1;
+recalculateSentence();
+}
 
-function getNounForm(caseName, nounIndex) {
+function subjsing() {
+switchnumber = 0;
+recalculateSentence();
+}
+
+function objplur() {
+switchnumber1 = 1;
+recalculateSentence();
+}
+
+function objsing() {
+switchnumber1 = 0;
+recalculateSentence();
+}
+
+function getNounForm(caseName, nounIndex, type) {
+let index;
+if (type == "s") {
+    if (switchnumber == 0) {
+    index = 0;
+    } else if (switchnumber == 1) {
+    index = 7;
+    }
+} else if (type == "o") {
+    if (switchnumber1 == 0) {
+    index = 0;
+    } else if (switchnumber1 == 1) {
+    index = 7;
+    }
+}
+if (nouns[nounIndex][7] == undefined) {
+index = 0;
+if (type == "s") {
+switchnumber = 0;
+} else if (type == "o") {
+switchnumber1 = 0;
+}
+}
     switch (caseName) {
         case "nf":
-            return [nouns[nounIndex][0], nouns[nounIndex][6]];
+            return [nouns[nounIndex][0+index], nouns[nounIndex][6]];
 
         case "þf":
-            return [nouns[nounIndex][1], nouns[nounIndex][6]];
+            return [nouns[nounIndex][1+index], nouns[nounIndex][6]];
 
         case "þgf":
-            return [nouns[nounIndex][2], nouns[nounIndex][6]];
+            return [nouns[nounIndex][2+index], nouns[nounIndex][6]];
 
         case "ef":
-            return [nouns[nounIndex][3], nouns[nounIndex][6]];
+            return [nouns[nounIndex][3+index], nouns[nounIndex][6]];
 
         default:
             return "";
@@ -317,14 +1011,14 @@ function recalculateSentence() {
     appliedartsubj = 0;
     appliedartobj = 0;
     
-    resultsubj = getNounForm(verbcasesubj, selectedSubject);
+    resultsubj = getNounForm(verbcasesubj, selectedSubject, "s");
     if (resultsubj[1] === "f") {
     artsubj = 0;
     } else if (artsubj === 1) {
     artsubj = 1;
     }
 
-resultobj = getNounForm(verbcaseobj, selectedObject);
+resultobj = getNounForm(verbcaseobj, selectedObject, "o");
 
 if (resultobj[1] === "f") {
     artobj = 0;
@@ -335,6 +1029,10 @@ if (resultobj[1] === "f") {
 let fall = nouns[selectedSubject][5];
 if (verbs[selectedVerb][0] == "vanta" || verbs[selectedVerb][0] == "langa") {
 fall = 2;
+}
+
+if (switchnumber == 1) {
+fall = 5;
 }
 
 if (isThereAux == 0 && pasttense == 0) {
@@ -629,14 +1327,31 @@ function getUnchangedWordIndexes(previousWords, currentWords) {
 }
 
 function applyverb() {
+deactbin();
 let xarray = "";
 let stringbutton = "";
 let yarray = "";
 let stringbutton2 = "";
-let stringgrsubjact = `<button class="menubutton" onclick="activateartsubj()">+gr.</button>`;
-let stringgrobjact = `<button class="menubutton" onclick="activateartobj()">+gr.</button>`;
-let stringgrsubjdeact = `<button class="menubutton" onclick="removeartsubj()">-gr.</button>`;
-let stringgrobjdeact = `<button class="menubutton" onclick="removeartobj()">-gr.</button>`;
+let stringgrsubjact = `<button class="menubuttonf" onclick="activateartsubj()">+gr.</button>`;
+let stringgrobjact = `<button class="menubuttonf" onclick="activateartobj()">+gr.</button>`;
+let stringgrsubjdeact = `<button class="menubuttonf" onclick="removeartsubj()">-gr.</button>`;
+let stringgrobjdeact = `<button class="menubuttonf" onclick="removeartobj()">-gr.</button>`;
+let stringsubjpl = "";
+let stringobjpl = "";
+if (resultsubj[1] == "n" && switchnumber == 0 && nouns[selectedSubject][7] !== undefined) {
+stringsubjpl = `<button class="menubuttonf" onclick="subjplur()">+ft.</button>`;
+} else if (resultsubj[1] == "n" && switchnumber == 1) {
+stringsubjpl = `<button class="menubuttonf" onclick="subjsing()">-ft.</button>`;
+} else {
+stringsubjpl = "";
+}
+if (resultobj[1] == "n" && switchnumber1 == 0 && nouns[selectedObject][7] !== undefined) {
+stringobjpl = `<button class="menubuttonf" onclick="objplur()">+ft.</button>`;
+} else if (resultobj[1] == "n" && switchnumber1 == 1) {
+stringobjpl = `<button class="menubuttonf" onclick="objsing()">-ft.</button>`;
+} else {
+stringobjpl = "";
+}
 let stateartsubj = "";
 let stateartobj = "";
 let descrcasesubj = "";
@@ -644,6 +1359,9 @@ let descrcaseobj = "";
 let strtense = "";
 let tenseindicator = "";
 let stringprep = "";
+let binsubj = "";
+let binverb = '<button class="openbin" onclick="genTableBinVerb()">' + verbs[selectedVerb][0] + " á BÍN</button>";
+let binobj = "";
 resultElement.style.display = "block";
 sentenceElement.innerHTML = "";
 if (artsubj == 1 && appliedartsubj == 0) {
@@ -658,28 +1376,42 @@ stringprep = `<button class="menubutton">` + verbs[selectedVerb][7] + `</button>
 }
 
 if (pasttense == 0) {
-strtense = `<button class="menubutton" onclick="activatepast()">+þátíð</button>`;
+strtense = `<button class="menubuttonf" onclick="activatepast()">+þátíð</button>`;
 tenseindicator = "<span class='caseinfo'>nútíð (present)</span>";
 } else {
-strtense = `<button class="menubutton" onclick="restorepresent()">+nútíð</button>`;
+strtense = `<button class="menubuttonf" onclick="restorepresent()">+nútíð</button>`;
 tenseindicator = "<span class='caseinfo'>þátíð (past)</span>"
 }
     
     if (isThereSubjAdj === 1 && resultsubj[1] == "n" && artsubj == 0) {
-        xarray = calcadjform(adjectivesstrong[selectedadjSubj], resultsubj[0], nouns[selectedSubject][4], verbs[selectedVerb][3]);
+        xarray = calcadjform(adjectivesstrong[selectedadjSubj], resultsubj[0], nouns[selectedSubject][4], verbs[selectedVerb][3], "s");
         stringbutton = `<button class="menubutton" onclick="recalcadjsubj()">` + xarray[0] + `</button>`;
+        binsubj = `<button class="openbin" onclick="genTableBinSubjAdj()">` + adjectivesstrong[selectedadjSubj][0] + ` á BÍN</button> <button class="openbin" onclick="genTableBinSubjNoun()">` + nouns[selectedSubject][0] + ` á BÍN</button>`;
         } else if (isThereSubjAdj === 1 && resultsubj[1] == "n" && artsubj == 1) {
-        xarray = calcadjformweak(adjectivesweak[selectedadjSubj], resultsubj[0], nouns[selectedSubject][4], verbs[selectedVerb][3]);
+        xarray = calcadjformweak(adjectivesweak[selectedadjSubj], resultsubj[0], nouns[selectedSubject][4], verbs[selectedVerb][3], "s");
         stringbutton = `<button class="menubutton" onclick="recalcadjsubj()">` + xarray[0] + `</button>`;
+        binsubj = `<button class="openbin" onclick="genTableBinSubjAdj()">` + adjectivesstrong[selectedadjSubj][0] + ` á BÍN</button> <button class="openbin" onclick="genTableBinSubjNoun()">` + nouns[selectedSubject][0] + ` á BÍN</button>`;
         }
         
     if (isThereObjAdj === 1 && resultobj[1] == "n" && artobj == 0) {
-        yarray = calcadjform(adjectivesstrong[selectedadjObj], resultobj[0], nouns[selectedObject][4], verbs[selectedVerb][4]);
+        yarray = calcadjform(adjectivesstrong[selectedadjObj], resultobj[0], nouns[selectedObject][4], verbs[selectedVerb][4], "o");
         stringbutton2 = `<button class="menubutton" onclick="recalcadjobj()">` + yarray[0] + `</button>`;
+        binobj = `<button class="openbin" onclick="genTableBinObjAdj()">` + adjectivesstrong[selectedadjObj][0] + ` á BÍN</button> <button class="openbin" onclick="genTableBinObjNoun()">` + nouns[selectedObject][0] + ` á BÍN</button>`;
         } else if (isThereObjAdj === 1 && resultobj[1] == "n" && artobj == 1) {
-        yarray = calcadjformweak(adjectivesweak[selectedadjObj], resultobj[0], nouns[selectedObject][4], verbs[selectedVerb][4]);
+        yarray = calcadjformweak(adjectivesweak[selectedadjObj], resultobj[0], nouns[selectedObject][4], verbs[selectedVerb][4], "o");
         stringbutton2 = `<button class="menubutton" onclick="recalcadjobj()">` + yarray[0] + `</button>`;
+        binobj = `<button class="openbin" onclick="genTableBinObjAdj()">` + adjectivesstrong[selectedadjObj][0] + ` á BÍN</button> <button class="openbin" onclick="genTableBinObjNoun()">` + nouns[selectedObject][0] + ` á BÍN</button>`;
         } 
+    
+     if (isThereSubjAdj === 0 && resultsubj[1] == "n") {
+    binsubj = `<button class="openbin" onclick="genTableBinSubjNoun()">` + nouns[selectedSubject][0] + ` á BÍN</button>`;
+    }
+    
+    if (isThereObjAdj === 0 && resultobj[1] == "n") {
+    binobj = `<button class="openbin" onclick="genTableBinObjNoun()">` + nouns[selectedObject][0] + ` á BÍN</button>`;
+    }
+    
+    
         
    if (verbcasesubj == "nf") {
     descrcasesubj = "nf. (nom)";
@@ -707,38 +1439,31 @@ tenseindicator = "<span class='caseinfo'>þátíð (past)</span>"
             "",
             "",
             "",
-            ""
+            "",
         ],
         [  "Frumlag (subject)",
             resultsubj[0],
             "<span class='caseinfo'>" + descrcasesubj + "</span>",
             "recalcsubj",
-            ""
+            binsubj,
         ],
         [
             "Sögn (verb)",
             resultv,
             tenseindicator,
             "recalcvb",
-            ""
+            binverb,
         ],
         [
             "Andlag (object)",
             resultobj[0],
             "<span class='caseinfo'>" + descrcaseobj + "</span>",
             "recalcobj",
-            ""
+            binobj,
         ],
-        [
-            "Tímaliður (Time phrase)",
-            "",
-            "",
-            "",
-            ""
-        ]
     ];
 
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < 5; i++) {
         const tableRow = sentenceElement.appendChild(
             document.createElement("tr")
         );
@@ -755,9 +1480,9 @@ tenseindicator = "<span class='caseinfo'>þátíð (past)</span>"
             document.createElement("td")
         );
         
-        const fourthCell = tableRow.appendChild(
-            document.createElement("td")
-        );
+        //const fourthCell = tableRow.appendChild(
+        //    document.createElement("td")
+        //);
         
         if (resultsubj[1] == "f") {
         artsubj = 0;
@@ -820,38 +1545,37 @@ tenseindicator = "<span class='caseinfo'>þátíð (past)</span>"
                 ` <button class="menubutton" onclick="${rows[3][3]}()">` +
                 `${rows[3][1]}</button>`;
                 }
-              fourthCell.innerHTML = `<button class="menubutton" onclick="addtimephrase()">` +
-                `+</button>`;  
+             // fourthCell.innerHTML = "";  
         } else if (i === 3) {
             if (resultsubj[1] == "n" && isThereSubjAdj == 0) {
-            firstCell.innerHTML = `<button class="menubutton" onclick="addadjsubj()">` +
+            firstCell.innerHTML = stringsubjpl + ` <button class="menubuttonf" onclick="addadjsubj()">` +
                 `+lo.</button> ` + stateartsubj;
             } else if (resultsubj[1] == "n" && isThereSubjAdj == 1) {
-            firstCell.innerHTML = `<button class="menubutton" onclick="removeadjsubj()">` +
+            firstCell.innerHTML = stringsubjpl + ` <button class="menubuttonf" onclick="removeadjsubj()">` +
                 `-lo.</button> ` + stateartsubj;
             } else {
             firstCell.innerHTML = "";
             }
             if (isThereAux == 0) {
-            secondCell.innerHTML = strtense + `<button class="menubutton" onclick="addaux()">+aux</button>`;
+            secondCell.innerHTML = strtense + ` <button class="menubuttonf" onclick="addaux()">+aux</button>`;
             } else {
-             secondCell.innerHTML = strtense + `<button class="menubutton" onclick="removeaux()">-aux</button>`;
+             secondCell.innerHTML = strtense + ` <button class="menubuttonf" onclick="removeaux()">-aux</button>`;
             }
             if (resultobj[1] == "n" && isThereObjAdj == 0) {
-           thirdCell.innerHTML = `<button class="menubutton" onclick="addadjobj()">` +
+           thirdCell.innerHTML = stringobjpl + ` <button class="menubuttonf" onclick="addadjobj()">` +
                 `+lo.</button> ` + stateartobj;
             } else if (resultobj[1] == "n" && isThereObjAdj == 1) {
-           thirdCell.innerHTML = `<button class="menubutton" onclick="removeadjobj()">` +
+           thirdCell.innerHTML = stringobjpl + ` <button class="menubuttonf" onclick="removeadjobj()">` +
                 `-lo.</button> ` + stateartobj;
             } else {
             thirdCell.innerHTML = "";
             }
-            fourthCell.innerHTML = "";
+           // fourthCell.innerHTML = "";
         } else {
             firstCell.innerHTML = `<p>${rows[1][i]}</p>`;
             secondCell.innerHTML = `<p>${rows[2][i]}</p>`;
             thirdCell.innerHTML = `<p>${rows[3][i]}</p>`;
-            fourthCell.innerHTML = `<p>${rows[4][i]}</p>`;
+           // fourthCell.innerHTML = `<p>${rows[4][i]}</p>`;
             
         }
     }
@@ -922,6 +1646,12 @@ applyverb();
 }
 
 function addartsubj() {
+let index;
+if (switchnumber == 0) {
+    index = 0;
+    } else if (switchnumber == 1) {
+    index = 4;
+    }
 artsubj = 1;
 verbcasesubjsaved = resultsubj[0];
 let artarray;
@@ -934,16 +1664,19 @@ artarray = art2;
 artarray = art3;
 }
 if (verbcasesubj == "nf") {
-artform = artarray[0];
+artform = artarray[0+index];
 } else if (verbcasesubj == "þf") {
-artform = artarray[1];
+artform = artarray[1+index];
 } else if (verbcasesubj == "þgf") {
-artform = artarray[2];
+artform = artarray[2+index];
 } else if (verbcasesubj == "ef") {
-artform = artarray[3];
+artform = artarray[3+index];
 }
 if (resultsubj[0].endsWith("a") == true || resultsubj[0].endsWith("i") == true || resultsubj[0].endsWith("u") == true) {
 artform = artform.slice(1);
+}
+if (resultsubj[0].endsWith("um") == true) {
+resultsubj[0] = resultsubj[0].slice(0,-1);
 }
 resultsubj[0] = resultsubj[0] + artform;
 appliedartsubj = 1;
@@ -974,6 +1707,12 @@ recalculateSentence();
 
 function addartobj() {
 artobj = 1;
+let index;
+if (switchnumber1 == 0) {
+    index = 0;
+    } else if (switchnumber1 == 1) {
+    index = 4;
+    }
 verbcaseobjsaved = resultobj[0];
 let artarray;
 let artform;
@@ -985,16 +1724,19 @@ artarray = art2;
 artarray = art3;
 }
 if (verbcaseobj == "nf") {
-artform = artarray[0];
+artform = artarray[0+index];
 } else if (verbcaseobj == "þf") {
-artform = artarray[1];
+artform = artarray[1+index];
 } else if (verbcaseobj == "þgf") {
-artform = artarray[2];
+artform = artarray[2+index];
 } else if (verbcaseobj == "ef") {
-artform = artarray[3];
+artform = artarray[3+index];
 }
 if (resultobj[0].endsWith("a") == true || resultobj[0].endsWith("i") == true || resultobj[0].endsWith("u") == true) {
 artform = artform.slice(1);
+}
+if (resultobj[0].endsWith("um") == true) {
+resultobj[0] = resultobj[0].slice(0,-1);
 }
 resultobj[0] = resultobj[0] + artform;
 appliedartobj = 1;
@@ -1098,15 +1840,29 @@ function recalcvb() {
     generateVerbList();
 }
 
-function calcadjform(adjectivearray, noun, noungender, casenoun) {
+function calcadjform(adjectivearray, noun, noungender, casenoun, type) {
+let index;
+if (type == "s") {
+    if (switchnumber == 0) {
+    index = 0;
+    } else if (switchnumber == 1) {
+    index = 12;
+    }
+} else if (type == "o") {
+    if (switchnumber1 == 0) {
+    index = 0;
+    } else if (switchnumber1 == 1) {
+    index = 12;
+    }
+}
 let a = [];
 let x;
 if (noungender == "m") {
-a = adjectivearray.slice(0, 4);
+a = adjectivearray.slice(0+index, 4+index);
 } else if (noungender == "f") {
-a = adjectivearray.slice(4, 8);
+a = adjectivearray.slice(4+index, 8+index);
 } else if (noungender == "n") {
-a = adjectivearray.slice(8, 12);
+a = adjectivearray.slice(8+index, 12+index);
 }
 if (casenoun == "nf") {
 x = a[0];
@@ -1120,16 +1876,29 @@ x = a[3];
 return [x, noun];
 }
 
-function calcadjformweak(adjectivearray, noun, noungender, casenoun) {
+function calcadjformweak(adjectivearray, noun, noungender, casenoun, type) {
     let x;
-
-    if (noungender == "m" && casenoun == "nf") {
+    let index;
+    if (type == "s") {
+    if (switchnumber == 0) {
+    index = 0;
+    } else if (switchnumber == 1) {
+    index = 1;
+    }
+} else if (type == "o") {
+    if (switchnumber1 == 0) {
+    index = 0;
+    } else if (switchnumber1 == 1) {
+    index = 1;
+    }
+}
+    if (noungender == "m" && casenoun == "nf" && index == 0) {
         x = adjectivearray[0];
-    } else if (noungender == "m" && casenoun !== "nf") {
+    } else if (noungender == "m" && casenoun !== "nf" && index == 0) {
         x = adjectivearray[1];
-    } else if (noungender == "n") {
+    } else if (noungender == "n" && index == 0) {
         x = adjectivearray[1];
-    } else if (noungender == "f" && casenoun == "nf") {
+    } else if (noungender == "f" && casenoun == "nf" && index == 0) {
         x = adjectivearray[1];
     } else {
         x = adjectivearray[2];
@@ -1141,7 +1910,6 @@ function calcadjformweak(adjectivearray, noun, noungender, casenoun) {
 function showabout() {
 const section = document.querySelector("section");
 last = lastVisibleDiv(section);
-console.log(last);
 subjectElement.style.display = "none";
 objectElement.style.display = "none";
 adjSubjElement.style.display = "none";
@@ -1156,7 +1924,6 @@ resultElement.style.display = "none";
 function showinstr() {
 const section = document.querySelector("section");
 last = lastVisibleDiv(section);
-console.log(last);
 subjectElement.style.display = "none";
 objectElement.style.display = "none";
 adjSubjElement.style.display = "none";
