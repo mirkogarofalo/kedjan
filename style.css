@@ -134,21 +134,19 @@
     width: 100%;
     border-collapse: collapse;
     margin: auto;
-    align: center;
 }
 
 th, td {
     padding: 4px 8px 4px 8px;
     text-align: center;
-    width: 360px;
 }
 
 .container img {
     width: 100px;
     height: 100px;
     margin: 8px;
-    align: center;
 }
+
 
 .resetbut {
 float: right;
@@ -486,6 +484,15 @@ float: right;
       background-color: #dddd46;
       font-size: 13px;
     }
+#strfinal {
+display: flex;
+flex-direction: column;
+width: 1400px;
+}
+
+#strfinal td {
+width: 460px;
+}
 
 #strfinal tr:nth-child(4){
  border-top: 1px solid #ccc;
@@ -498,6 +505,13 @@ float: right;
  border-bottom: 1px dotted #fff;
 }
 
+#bin .bin-current-form {
+    font-weight: 700;
+    color: green;
+    background-color: #eeeeee;
+    padding: 6px;
+    border-radius: 6px;
+}
 
 @keyframes word-change-in {
   0% {

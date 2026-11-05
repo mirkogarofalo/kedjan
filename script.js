@@ -163,6 +163,88 @@ const art1 = ["inn","inn","inum","ins","nir","na","num","nna"];
 const art2 = ["in","ina","inni","innar","nar","nar","num","nna"];
 const art3 = ["ið","ið","inu","ins","in","in","num","nna"];
 
+function getBinCaseRow(caseName) {
+    return {
+        nf: 1,   
+        "þf": 2,
+        "þgf": 3,
+        ef: 4    
+    }[caseName] ?? null;
+}
+
+function highlightBinCell(rowIndex, cellIndex) {
+    binElement
+        .querySelectorAll(".bin-current-form")
+        .forEach(cell => cell.classList.remove("bin-current-form"));
+
+    const cell = binElement.rows[rowIndex]?.cells[cellIndex];
+    if (cell) {
+        cell.classList.add("bin-current-form");
+    }
+}
+
+function highlightNounBin(role) {
+    const isSubject = role === "subject";
+    const caseName = isSubject ? verbcasesubj : verbcaseobj;
+    const nounIndex = isSubject ? selectedSubject : selectedObject;
+    const number = isSubject ? switchnumber : switchnumber1;
+    const hasPlural = nouns[nounIndex][7] !== undefined;
+    const isPlural = number === 1 && hasPlural;
+    const isDefinite = isSubject ? artsubj === 1 : artobj === 1;
+
+    const row = getBinCaseRow(caseName);
+    if (row === null) return;
+
+    // Table columns: label, singular, plural, singular definite, plural definite.
+    const column = (isPlural ? 2 : 1) + (isDefinite ? 2 : 0);
+    highlightBinCell(row, column);
+}
+
+function highlightAdjectiveBin(role, tableIsWeak) {
+    const isSubject = role === "subject";
+    const nounIndex = isSubject ? selectedSubject : selectedObject;
+    const caseName = isSubject ? verbcasesubj : verbcaseobj;
+    const number = isSubject ? switchnumber : switchnumber1;
+    const isWeak = isSubject ? artsubj === 1 : artobj === 1;
+
+    if (tableIsWeak !== isWeak) return;
+
+    const gender = nouns[nounIndex][4];
+    const genderOffset = { m: 0, f: 1, n: 2 }[gender];
+    const caseRow = getBinCaseRow(caseName);
+
+    if (genderOffset === undefined || caseRow === null) return;
+
+    const row = caseRow + 1;
+    const column = 1 + genderOffset + (number === 1 ? 3 : 0);
+
+    highlightBinCell(row, column);
+}
+
+function highlightVerbBin() {
+    if (isThereAux === 1) return;
+
+    let person = nouns[selectedSubject][5];
+
+    if (verbs[selectedVerb][0] === "vanta" ||
+        verbs[selectedVerb][0] === "langa") {
+        person = 2;
+    }
+    if (switchnumber === 1) {
+        person = 5;
+    }
+
+    if (!Number.isInteger(person) || person < 0 || person > 5) return;
+
+    const isPlural = person >= 3;
+    const row = (person % 3) + 1;
+    const column = pasttense === 1
+        ? (isPlural ? 4 : 3)
+        : (isPlural ? 2 : 1);
+
+    highlightBinCell(row, column);
+}
+
 async function getNounBin(lemma, targetCase) {
 let url;
 if (lemma == "saga") {
@@ -186,11 +268,12 @@ if (lemma == "saga") {
 
         const paradigm = data[0].bmyndir;
 
-        const match = paradigm.find(item => {
-            const tag = item.g || "";
-            return tag.includes(targetCase);
-        });
-        return match.b;
+        const match =
+    paradigm.find(item => (item.g || "") === targetCase) ??
+    paradigm.find(item => (item.g || "").split(/[-\s]/).includes(targetCase)) ??
+    paradigm.find(item => (item.g || "").includes(targetCase));
+
+return match?.b ?? lemma;
 
     } catch (error) {
         console.error("Error fetching from BÍN:", error);
@@ -220,11 +303,12 @@ let url;
 
         const paradigm = data[0].bmyndir;
 
-        const match = paradigm.find(item => {
-            const tag = item.g || "";
-            return tag.includes(targetForm);
-        });
-        return match.b;
+        const match =
+    paradigm.find(item => (item.g || "") === targetForm) ??
+    paradigm.find(item => (item.g || "").split(/[-\s]/).includes(targetForm)) ??
+    paradigm.find(item => (item.g || "").includes(targetForm));
+
+return match?.b ?? lemma;
 
     } catch (error) {
         console.error("Error fetching from BÍN:", error);
@@ -253,11 +337,12 @@ let url;
 
         const paradigm = data[0].bmyndir;
 
-        const match = paradigm.find(item => {
-            const tag = item.g || "";
-            return tag.includes(targetForm);
-        });
-        return match.b;
+        const match =
+    paradigm.find(item => (item.g || "") === targetForm) ??
+    paradigm.find(item => (item.g || "").split(/[-\s]/).includes(targetForm)) ??
+    paradigm.find(item => (item.g || "").includes(targetForm));
+
+return match?.b ?? lemma;
 
     } catch (error) {
         console.error("Error fetching from BÍN:", error);
@@ -291,41 +376,42 @@ const fifthCell = tableRow.appendChild(
             document.createElement("td")
         );
 if (i == 0) {
-    firstCell.innerHTML = "Case";
-    secondCell.innerHTML = "Singular without art.";
-    thirdCell.innerHTML = "Plural without art.";
-     fourthCell.innerHTML = "Singular with art.";
-      fifthCell.innerHTML = "Plural with art.";
+    firstCell.innerHTML = "<b>Case</b>";
+    secondCell.innerHTML = "<b>Singular without art.</b>";
+    thirdCell.innerHTML = "<b>Plural without art.</b>";
+     fourthCell.innerHTML = "<b>Singular with art.</b>";
+      fifthCell.innerHTML = "<b>Plural with art.</b>";
 } 
 if (i == 1) {
-    firstCell.innerHTML = "Nf.";
+    firstCell.innerHTML = "<b>Nf.</b>";
     secondCell.innerHTML = await getNounBin(nouns[selectedSubject][0], "NFET");
     thirdCell.innerHTML = await getNounBin(nouns[selectedSubject][0], "NFFT");
      fourthCell.innerHTML = await getNounBin(nouns[selectedSubject][0], "NFETgr");
       fifthCell.innerHTML = await getNounBin(nouns[selectedSubject][0], "NFFTgr");
 }
 if (i == 2) {
-    firstCell.innerHTML = "Þf.";
+    firstCell.innerHTML = "<b>Þf.</b>";
     secondCell.innerHTML = await getNounBin(nouns[selectedSubject][0], "ÞFET");
     thirdCell.innerHTML = await getNounBin(nouns[selectedSubject][0], "ÞFFT");
      fourthCell.innerHTML = await getNounBin(nouns[selectedSubject][0], "ÞFETgr");
       fifthCell.innerHTML = await getNounBin(nouns[selectedSubject][0], "ÞFFTgr");
 }
 if (i == 3) {
-    firstCell.innerHTML = "Þgf.";
+    firstCell.innerHTML = "<b>Þgf.</b>";
     secondCell.innerHTML = await getNounBin(nouns[selectedSubject][0], "ÞGFET");
     thirdCell.innerHTML = await getNounBin(nouns[selectedSubject][0], "ÞGFFT");
      fourthCell.innerHTML = await getNounBin(nouns[selectedSubject][0], "ÞGFETgr");
       fifthCell.innerHTML = await getNounBin(nouns[selectedSubject][0], "ÞGFFTgr");
 }
 if (i == 4) {
-    firstCell.innerHTML = "Ef.";
+    firstCell.innerHTML = "<b>Ef.</b>";
     secondCell.innerHTML = await getNounBin(nouns[selectedSubject][0], "EFET");
     thirdCell.innerHTML = await getNounBin(nouns[selectedSubject][0], "EFFT");
      fourthCell.innerHTML = await getNounBin(nouns[selectedSubject][0], "EFETgr");
       fifthCell.innerHTML = await getNounBin(nouns[selectedSubject][0], "EFFTgr");
 }
 }
+highlightNounBin("subject");
 }
 
 async function genTableBinObjAdjVeik() {
@@ -360,25 +446,25 @@ const seventhCell = tableRow.appendChild(
             document.createElement("td")
         );
 if (i == 0) {
-    firstCell.innerHTML = "Case";
+    firstCell.innerHTML = "<b>Case</b>";
     secondCell.innerHTML = "";
-    thirdCell.innerHTML = "Singular";
+    thirdCell.innerHTML = "<b>Singular</b>";
      fourthCell.innerHTML = "";
       fifthCell.innerHTML = "";
-      sixthCell.innerHTML = "Plural";
+      sixthCell.innerHTML = "<b>Plural</b>";
       seventhCell.innerHTML = "";
 } 
 if (i == 1) {
     firstCell.innerHTML = "";
-    secondCell.innerHTML = "Masc";
-    thirdCell.innerHTML = "Fem";
-     fourthCell.innerHTML = "Neu";
-      fifthCell.innerHTML = "Masc";
-      sixthCell.innerHTML = "Fem";
-      seventhCell.innerHTML = "Neu";
+    secondCell.innerHTML = "<b>Masc</b>";
+    thirdCell.innerHTML = "<b>Fem</b>";
+     fourthCell.innerHTML = "<b>Neut</b>";
+      fifthCell.innerHTML = "<b>Masc</b>";
+      sixthCell.innerHTML = "<b>Fem</b>";
+      seventhCell.innerHTML = "<b>Neut</b>";
 } 
 if (i == 2) {
-    firstCell.innerHTML = "Nf.";
+    firstCell.innerHTML = "<b>Nf.</b>";
     secondCell.innerHTML = adjectivesweak[selectedadjObj][0];
     thirdCell.innerHTML = adjectivesweak[selectedadjObj][1];
      fourthCell.innerHTML = adjectivesweak[selectedadjObj][1];
@@ -387,7 +473,7 @@ if (i == 2) {
       seventhCell.innerHTML = adjectivesweak[selectedadjObj][2];
 }
 if (i == 3) {
-    firstCell.innerHTML = "Þf.";
+    firstCell.innerHTML = "<b>Þf.</b>";
     secondCell.innerHTML = adjectivesweak[selectedadjObj][1];
     thirdCell.innerHTML = adjectivesweak[selectedadjObj][2];
      fourthCell.innerHTML = adjectivesweak[selectedadjObj][1];
@@ -396,7 +482,7 @@ if (i == 3) {
       seventhCell.innerHTML = adjectivesweak[selectedadjObj][2];
 }
 if (i == 4) {
-    firstCell.innerHTML = "Þgf.";
+    firstCell.innerHTML = "<b>Þgf.</b>";
   secondCell.innerHTML = adjectivesweak[selectedadjObj][1];
     thirdCell.innerHTML = adjectivesweak[selectedadjObj][2];
      fourthCell.innerHTML = adjectivesweak[selectedadjObj][1];
@@ -405,7 +491,7 @@ if (i == 4) {
       seventhCell.innerHTML = adjectivesweak[selectedadjObj][2];
 }
 if (i == 5) {
-    firstCell.innerHTML = "Ef.";
+    firstCell.innerHTML = "<b>Ef.</b>";
   secondCell.innerHTML = adjectivesweak[selectedadjObj][1];
     thirdCell.innerHTML = adjectivesweak[selectedadjObj][2];
      fourthCell.innerHTML = adjectivesweak[selectedadjObj][1];
@@ -414,6 +500,7 @@ if (i == 5) {
       seventhCell.innerHTML = adjectivesweak[selectedadjObj][2];
 }
 }
+highlightAdjectiveBin("object", true);  
 }
 
 async function genTableBinObjAdj() {
@@ -448,25 +535,25 @@ const seventhCell = tableRow.appendChild(
             document.createElement("td")
         );
 if (i == 0) {
-    firstCell.innerHTML = "Case";
+    firstCell.innerHTML = "<b>Case</b>";
     secondCell.innerHTML = "";
-    thirdCell.innerHTML = "Singular";
+    thirdCell.innerHTML = "<b>Singular</b>";
      fourthCell.innerHTML = "";
       fifthCell.innerHTML = "";
-      sixthCell.innerHTML = "Plural";
+      sixthCell.innerHTML = "<b>Plural</b>";
       seventhCell.innerHTML = "";
 } 
 if (i == 1) {
     firstCell.innerHTML = "";
-    secondCell.innerHTML = "Masc";
-    thirdCell.innerHTML = "Fem";
-     fourthCell.innerHTML = "Neu";
-      fifthCell.innerHTML = "Masc";
-      sixthCell.innerHTML = "Fem";
-      seventhCell.innerHTML = "Neu";
+    secondCell.innerHTML = "<b>Masc</b>";
+    thirdCell.innerHTML = "<b>Fem</b>";
+     fourthCell.innerHTML = "<b>Neut</b>";
+      fifthCell.innerHTML = "<b>Masc</b>";
+      sixthCell.innerHTML = "<b>Fem</b>";
+      seventhCell.innerHTML = "<b>Neut</b>";
 } 
 if (i == 2) {
-    firstCell.innerHTML = "Nf.";
+    firstCell.innerHTML = "<b>Nf.</b>";
     secondCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjObj][0], "FSB-KK-NFET");
     thirdCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjObj][0], "FSB-KVK-NFET");
      fourthCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjObj][0], "FSB-HK-NFET");
@@ -475,7 +562,7 @@ if (i == 2) {
       seventhCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjObj][0], "FSB-HK-NFFT");
 }
 if (i == 3) {
-    firstCell.innerHTML = "Þf.";
+    firstCell.innerHTML = "<b>Þf.</b>";
       secondCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjObj][0], "FSB-KK-ÞFET");
     thirdCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjObj][0], "FSB-KVK-ÞFET");
      fourthCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjObj][0], "FSB-HK-ÞFET");
@@ -484,7 +571,7 @@ if (i == 3) {
       seventhCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjObj][0], "FSB-HK-ÞFFT");
 }
 if (i == 4) {
-    firstCell.innerHTML = "Þgf.";
+    firstCell.innerHTML = "<b>Þgf.</b>";
     secondCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjObj][0], "FSB-KK-ÞGFET");
     thirdCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjObj][0], "FSB-KVK-ÞGFET");
      fourthCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjObj][0], "FSB-HK-ÞGFET");
@@ -493,7 +580,7 @@ if (i == 4) {
       seventhCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjObj][0], "FSB-HK-ÞGFFT");
 }
 if (i == 5) {
-    firstCell.innerHTML = "Ef.";
+    firstCell.innerHTML = "<b>Ef.</b>";
       secondCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjObj][0], "FSB-KK-EFET");
     thirdCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjObj][0], "FSB-KVK-EFET");
      fourthCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjObj][0], "FSB-HK-EFET");
@@ -502,6 +589,7 @@ if (i == 5) {
       seventhCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjObj][0], "FSB-HK-EFFT");
 }
 }
+highlightAdjectiveBin("object", false); 
 }
 
 async function genTableBinSubjAdjVeik() {
@@ -536,25 +624,25 @@ const seventhCell = tableRow.appendChild(
             document.createElement("td")
         );
 if (i == 0) {
-    firstCell.innerHTML = "Case";
+    firstCell.innerHTML = "<b>Case</b>";
     secondCell.innerHTML = "";
-    thirdCell.innerHTML = "Singular";
+    thirdCell.innerHTML = "<b>Singular</b>";
      fourthCell.innerHTML = "";
       fifthCell.innerHTML = "";
-      sixthCell.innerHTML = "Plural";
+      sixthCell.innerHTML = "<b>Plural</b>";
       seventhCell.innerHTML = "";
 } 
 if (i == 1) {
     firstCell.innerHTML = "";
-    secondCell.innerHTML = "Masc";
-    thirdCell.innerHTML = "Fem";
-     fourthCell.innerHTML = "Neu";
-      fifthCell.innerHTML = "Masc";
-      sixthCell.innerHTML = "Fem";
-      seventhCell.innerHTML = "Neu";
+    secondCell.innerHTML = "<b>Masc</b>";
+    thirdCell.innerHTML = "<b>Fem</b>";
+     fourthCell.innerHTML = "<b>Neut</b>";
+      fifthCell.innerHTML = "<b>Masc</b>";
+      sixthCell.innerHTML = "<b>Fem</b>";
+      seventhCell.innerHTML = "<b>Neut</b>";
 } 
 if (i == 2) {
-    firstCell.innerHTML = "Nf.";
+    firstCell.innerHTML = "<b>Nf.</b>";
     secondCell.innerHTML = adjectivesweak[selectedadjSubj][0];
     thirdCell.innerHTML = adjectivesweak[selectedadjSubj][1];
      fourthCell.innerHTML = adjectivesweak[selectedadjSubj][1];
@@ -563,7 +651,7 @@ if (i == 2) {
       seventhCell.innerHTML = adjectivesweak[selectedadjSubj][2];
 }
 if (i == 3) {
-    firstCell.innerHTML = "Þf.";
+    firstCell.innerHTML = "<b>Þf.</b>";
     secondCell.innerHTML = adjectivesweak[selectedadjSubj][1];
     thirdCell.innerHTML = adjectivesweak[selectedadjSubj][2];
      fourthCell.innerHTML = adjectivesweak[selectedadjSubj][1];
@@ -572,7 +660,7 @@ if (i == 3) {
       seventhCell.innerHTML = adjectivesweak[selectedadjSubj][2];
 }
 if (i == 4) {
-    firstCell.innerHTML = "Þgf.";
+    firstCell.innerHTML = "<b>Þgf.</b>";
     secondCell.innerHTML = adjectivesweak[selectedadjSubj][1];
     thirdCell.innerHTML = adjectivesweak[selectedadjSubj][2];
      fourthCell.innerHTML = adjectivesweak[selectedadjSubj][1];
@@ -581,7 +669,7 @@ if (i == 4) {
       seventhCell.innerHTML = adjectivesweak[selectedadjSubj][2];
 }
 if (i == 5) {
-    firstCell.innerHTML = "Ef.";
+    firstCell.innerHTML = "<b>Ef.</b>";
     secondCell.innerHTML = adjectivesweak[selectedadjSubj][1];
     thirdCell.innerHTML = adjectivesweak[selectedadjSubj][2];
      fourthCell.innerHTML = adjectivesweak[selectedadjSubj][1];
@@ -590,6 +678,7 @@ if (i == 5) {
       seventhCell.innerHTML = adjectivesweak[selectedadjSubj][2];
 }
 }
+highlightAdjectiveBin("subject", true);
 }
 
 async function genTableBinSubjAdj() {
@@ -624,25 +713,25 @@ const seventhCell = tableRow.appendChild(
             document.createElement("td")
         );
 if (i == 0) {
-    firstCell.innerHTML = "Case";
+    firstCell.innerHTML = "<b>Case</b>";
     secondCell.innerHTML = "";
-    thirdCell.innerHTML = "Singular";
+    thirdCell.innerHTML = "<b>Singular</b>";
      fourthCell.innerHTML = "";
       fifthCell.innerHTML = "";
-      sixthCell.innerHTML = "Plural";
+      sixthCell.innerHTML = "<b>Plural</b>";
       seventhCell.innerHTML = "";
 } 
 if (i == 1) {
     firstCell.innerHTML = "";
-    secondCell.innerHTML = "Masc";
-    thirdCell.innerHTML = "Fem";
-     fourthCell.innerHTML = "Neu";
-      fifthCell.innerHTML = "Masc";
-      sixthCell.innerHTML = "Fem";
-      seventhCell.innerHTML = "Neu";
+    secondCell.innerHTML = "<b>Masc</b>";
+    thirdCell.innerHTML = "<b>Fem</b>";
+     fourthCell.innerHTML = "<b>Neut</b>";
+      fifthCell.innerHTML = "<b>Masc</b>";
+      sixthCell.innerHTML = "<b>Fem</b>";
+      seventhCell.innerHTML = "<b>Neut</b>";
 } 
 if (i == 2) {
-    firstCell.innerHTML = "Nf.";
+    firstCell.innerHTML = "<b>Nf.</b>";
     secondCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjSubj][0], "FSB-KK-NFET");
     thirdCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjSubj][0], "FSB-KVK-NFET");
      fourthCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjSubj][0], "FSB-HK-NFET");
@@ -651,7 +740,7 @@ if (i == 2) {
       seventhCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjSubj][0], "FSB-HK-NFFT");
 }
 if (i == 3) {
-    firstCell.innerHTML = "Þf.";
+    firstCell.innerHTML = "<b>Þf.</b>";
       secondCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjSubj][0], "FSB-KK-ÞFET");
     thirdCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjSubj][0], "FSB-KVK-ÞFET");
      fourthCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjSubj][0], "FSB-HK-ÞFET");
@@ -660,7 +749,7 @@ if (i == 3) {
       seventhCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjSubj][0], "FSB-HK-ÞFFT");
 }
 if (i == 4) {
-    firstCell.innerHTML = "Þgf.";
+    firstCell.innerHTML = "<b>Þgf.</b>";
     secondCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjSubj][0], "FSB-KK-ÞGFET");
     thirdCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjSubj][0], "FSB-KVK-ÞGFET");
      fourthCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjSubj][0], "FSB-HK-ÞGFET");
@@ -669,7 +758,7 @@ if (i == 4) {
       seventhCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjSubj][0], "FSB-HK-ÞGFFT");
 }
 if (i == 5) {
-    firstCell.innerHTML = "Ef.";
+    firstCell.innerHTML = "<b>Ef.</b>";
       secondCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjSubj][0], "FSB-KK-EFET");
     thirdCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjSubj][0], "FSB-KVK-EFET");
      fourthCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjSubj][0], "FSB-HK-EFET");
@@ -678,6 +767,7 @@ if (i == 5) {
       seventhCell.innerHTML = await getAdjBin(adjectivesstrong[selectedadjSubj][0], "FSB-HK-EFFT");
 }
 }
+highlightAdjectiveBin("subject", false);
 }
 
 async function genTableBinObjNoun() {
@@ -706,41 +796,42 @@ const fifthCell = tableRow.appendChild(
             document.createElement("td")
         );
 if (i == 0) {
-    firstCell.innerHTML = "Case";
-    secondCell.innerHTML = "Singular without art.";
-    thirdCell.innerHTML = "Plural without art.";
-     fourthCell.innerHTML = "Singular with art.";
-      fifthCell.innerHTML = "Plural with art.";
+    firstCell.innerHTML = "<b>Case</b>";
+    secondCell.innerHTML = "<b>Singular without art.</b>";
+    thirdCell.innerHTML = "<b>Plural without art.</b>";
+     fourthCell.innerHTML = "<b>Singular with art.</b>";
+      fifthCell.innerHTML = "<b>Plural with art.</b>";
 } 
 if (i == 1) {
-    firstCell.innerHTML = "Nf.";
+    firstCell.innerHTML = "<b>Nf.</b>";
     secondCell.innerHTML = await getNounBin(nouns[selectedObject][0], "NFET");
     thirdCell.innerHTML = await getNounBin(nouns[selectedObject][0], "NFFT");
      fourthCell.innerHTML = await getNounBin(nouns[selectedObject][0], "NFETgr");
       fifthCell.innerHTML = await getNounBin(nouns[selectedObject][0], "NFFTgr");
 }
 if (i == 2) {
-    firstCell.innerHTML = "Þf.";
+    firstCell.innerHTML = "<b>Þf.</b>";
     secondCell.innerHTML = await getNounBin(nouns[selectedObject][0], "ÞFET");
     thirdCell.innerHTML = await getNounBin(nouns[selectedObject][0], "ÞFFT");
      fourthCell.innerHTML = await getNounBin(nouns[selectedObject][0], "ÞFETgr");
       fifthCell.innerHTML = await getNounBin(nouns[selectedObject][0], "ÞFFTgr");
 }
 if (i == 3) {
-    firstCell.innerHTML = "Þgf.";
+    firstCell.innerHTML = "<b>Þgf.</b>";
     secondCell.innerHTML = await getNounBin(nouns[selectedObject][0], "ÞGFET");
     thirdCell.innerHTML = await getNounBin(nouns[selectedObject][0], "ÞGFFT");
      fourthCell.innerHTML = await getNounBin(nouns[selectedObject][0], "ÞGFETgr");
       fifthCell.innerHTML = await getNounBin(nouns[selectedObject][0], "ÞGFFTgr");
 }
 if (i == 4) {
-    firstCell.innerHTML = "Ef.";
+    firstCell.innerHTML = "<b>Ef.</b>";
     secondCell.innerHTML = await getNounBin(nouns[selectedObject][0], "EFET");
     thirdCell.innerHTML = await getNounBin(nouns[selectedObject][0], "EFFT");
      fourthCell.innerHTML = await getNounBin(nouns[selectedObject][0], "EFETgr");
       fifthCell.innerHTML = await getNounBin(nouns[selectedObject][0], "EFFTgr");
 }
 }
+highlightNounBin("object");
 }
 
 function deactbin() {
@@ -779,34 +870,47 @@ const fifthCell = tableRow.appendChild(
             document.createElement("td")
         );
 if (i == 0) {
-    firstCell.innerHTML = "Person";
-    secondCell.innerHTML = "Singular present";
-    thirdCell.innerHTML = "Plural present";
-     fourthCell.innerHTML = "Singular past";
-      fifthCell.innerHTML = "Plural past";
+    firstCell.innerHTML = "<b>Person</b>";
+    secondCell.innerHTML = "<b>Singular present</b>";
+    thirdCell.innerHTML = "<b>Plural present</b>";
+     fourthCell.innerHTML = "<b>Singular past</b>";
+      fifthCell.innerHTML = "<b>Plural past</b>";
 } 
 if (i == 1) {
-    firstCell.innerHTML = "1.ps.";
+    firstCell.innerHTML = "<b>1.ps.</b>";
     secondCell.innerHTML = await getVerbBin(verbs[selectedVerb][0], verbforms[0]);
     thirdCell.innerHTML = await getVerbBin(verbs[selectedVerb][0], verbforms[3]);
      fourthCell.innerHTML = await getVerbBin(verbs[selectedVerb][0], verbforms[6]);
       fifthCell.innerHTML = await getVerbBin(verbs[selectedVerb][0], verbforms[9]);
 }
 if (i == 2) {
-    firstCell.innerHTML = "2.ps.";
+    firstCell.innerHTML = "<b>2.ps.</b>";
     secondCell.innerHTML =  await getVerbBin(verbs[selectedVerb][0], verbforms[1]);
     thirdCell.innerHTML = await getVerbBin(verbs[selectedVerb][0], verbforms[4]);
      fourthCell.innerHTML =  await getVerbBin(verbs[selectedVerb][0], verbforms[7]);
       fifthCell.innerHTML = await getVerbBin(verbs[selectedVerb][0], verbforms[10]);
 }
 if (i == 3) {
-    firstCell.innerHTML = "3.ps.";
+    firstCell.innerHTML = "<b>3.ps.</b>";
     secondCell.innerHTML = await getVerbBin(verbs[selectedVerb][0], verbforms[2]);
     thirdCell.innerHTML = await getVerbBin(verbs[selectedVerb][0], verbforms[5]);
      fourthCell.innerHTML = await getVerbBin(verbs[selectedVerb][0], verbforms[8]);
       fifthCell.innerHTML = await getVerbBin(verbs[selectedVerb][0], verbforms[11]);
 }
 }
+highlightVerbBin();
+}
+
+function openSubjAdjBin() {
+    return artsubj === 1
+        ? genTableBinSubjAdjVeik()
+        : genTableBinSubjAdj();
+}
+
+function openObjAdjBin() {
+    return artobj === 1
+        ? genTableBinObjAdjVeik()
+        : genTableBinObjAdj();
 }
 
 function calcverb(infin, firstPersonForm, pers) {
@@ -1386,21 +1490,21 @@ tenseindicator = "<span class='caseinfo'>þátíð (past)</span>"
     if (isThereSubjAdj === 1 && resultsubj[1] == "n" && artsubj == 0) {
         xarray = calcadjform(adjectivesstrong[selectedadjSubj], resultsubj[0], nouns[selectedSubject][4], verbs[selectedVerb][3], "s");
         stringbutton = `<button class="menubutton" onclick="recalcadjsubj()">` + xarray[0] + `</button>`;
-        binsubj = `<button class="openbin" onclick="genTableBinSubjAdj()">` + adjectivesstrong[selectedadjSubj][0] + ` á BÍN</button> <button class="openbin" onclick="genTableBinSubjNoun()">` + nouns[selectedSubject][0] + ` á BÍN</button>`;
+        binsubj = `<button class="openbin" onclick="openSubjAdjBin()">` + adjectivesstrong[selectedadjSubj][0] + ` á BÍN</button> <button class="openbin" onclick="genTableBinSubjNoun()">` + nouns[selectedSubject][0] + ` á BÍN</button>`;
         } else if (isThereSubjAdj === 1 && resultsubj[1] == "n" && artsubj == 1) {
         xarray = calcadjformweak(adjectivesweak[selectedadjSubj], resultsubj[0], nouns[selectedSubject][4], verbs[selectedVerb][3], "s");
         stringbutton = `<button class="menubutton" onclick="recalcadjsubj()">` + xarray[0] + `</button>`;
-        binsubj = `<button class="openbin" onclick="genTableBinSubjAdj()">` + adjectivesstrong[selectedadjSubj][0] + ` á BÍN</button> <button class="openbin" onclick="genTableBinSubjNoun()">` + nouns[selectedSubject][0] + ` á BÍN</button>`;
+        binsubj = `<button class="openbin" onclick="openSubjAdjBin()">` + adjectivesstrong[selectedadjSubj][0] + ` á BÍN</button> <button class="openbin" onclick="genTableBinSubjNoun()">` + nouns[selectedSubject][0] + ` á BÍN</button>`;
         }
         
     if (isThereObjAdj === 1 && resultobj[1] == "n" && artobj == 0) {
         yarray = calcadjform(adjectivesstrong[selectedadjObj], resultobj[0], nouns[selectedObject][4], verbs[selectedVerb][4], "o");
         stringbutton2 = `<button class="menubutton" onclick="recalcadjobj()">` + yarray[0] + `</button>`;
-        binobj = `<button class="openbin" onclick="genTableBinObjAdj()">` + adjectivesstrong[selectedadjObj][0] + ` á BÍN</button> <button class="openbin" onclick="genTableBinObjNoun()">` + nouns[selectedObject][0] + ` á BÍN</button>`;
+        binobj = `<button class="openbin" onclick="openObjAdjBin()">` + adjectivesstrong[selectedadjObj][0] + ` á BÍN</button> <button class="openbin" onclick="genTableBinObjNoun()">` + nouns[selectedObject][0] + ` á BÍN</button>`;
         } else if (isThereObjAdj === 1 && resultobj[1] == "n" && artobj == 1) {
         yarray = calcadjformweak(adjectivesweak[selectedadjObj], resultobj[0], nouns[selectedObject][4], verbs[selectedVerb][4], "o");
         stringbutton2 = `<button class="menubutton" onclick="recalcadjobj()">` + yarray[0] + `</button>`;
-        binobj = `<button class="openbin" onclick="genTableBinObjAdj()">` + adjectivesstrong[selectedadjObj][0] + ` á BÍN</button> <button class="openbin" onclick="genTableBinObjNoun()">` + nouns[selectedObject][0] + ` á BÍN</button>`;
+        binobj = `<button class="openbin" onclick="openObjAdjBin()">` + adjectivesstrong[selectedadjObj][0] + ` á BÍN</button> <button class="openbin" onclick="genTableBinObjNoun()">` + nouns[selectedObject][0] + ` á BÍN</button>`;
         } 
     
      if (isThereSubjAdj === 0 && resultsubj[1] == "n") {
@@ -1622,6 +1726,8 @@ buttons.forEach((button) => {
         }
     });
 });
+sentenceElement.style.display = "flex";
+sentenceElement.style.flexDirection = "column";
 previousMenubuttonWords = currentWordState;
 }
 
@@ -1672,8 +1778,10 @@ artform = artarray[2+index];
 } else if (verbcasesubj == "ef") {
 artform = artarray[3+index];
 }
+if (switchnumber == 0) {
 if (resultsubj[0].endsWith("a") == true || resultsubj[0].endsWith("i") == true || resultsubj[0].endsWith("u") == true) {
 artform = artform.slice(1);
+}
 }
 if (resultsubj[0].endsWith("um") == true) {
 resultsubj[0] = resultsubj[0].slice(0,-1);
@@ -1732,8 +1840,13 @@ artform = artarray[2+index];
 } else if (verbcaseobj == "ef") {
 artform = artarray[3+index];
 }
+if (switchnumber1 == 0) {
 if (resultobj[0].endsWith("a") == true || resultobj[0].endsWith("i") == true || resultobj[0].endsWith("u") == true) {
 artform = artform.slice(1);
+}
+}
+if (resultobj[0] == "kokki") {
+resultobj[0] = "kokk";
 }
 if (resultobj[0].endsWith("um") == true) {
 resultobj[0] = resultobj[0].slice(0,-1);
