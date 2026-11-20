@@ -998,7 +998,7 @@ if (person == 0 || person == 2) {
     resultv = plural.substring(0, plural.length - 2) + "u";
 }
     if (verbs[index][0] == "vanta") {
-    resultv == "vantaði";
+    resultv = "vantaði";
     } else if (verbs[index][0] == "langa") {
     resultv = "langaði";
     }
