@@ -194,8 +194,7 @@ function highlightNounBin(role) {
 
     const row = getBinCaseRow(caseName);
     if (row === null) return;
-
-    // Table columns: label, singular, plural, singular definite, plural definite.
+    
     const column = (isPlural ? 2 : 1) + (isDefinite ? 2 : 0);
     highlightBinCell(row, column);
 }
@@ -2096,7 +2095,7 @@ function lastVisibleDiv(section) {
     );
   });
 
-  return visibleDivs.at(-1) ?? null; // last in DOM order
+  return visibleDivs.at(-1) ?? null; 
 }
 
 subjectElement.style.display = "none";
