@@ -1303,7 +1303,11 @@ function createNounList(container, buttonCreator) {
         const cell = row.appendChild(document.createElement("td"));
 
         const image = document.createElement("img");
-        image.src = "img/nouns/" + nouns[i][0] + ".png";
+        if (container.id == "nounlist") {
+        image.src = "img/nouns/" + nouns[i][0] + ".jpg";
+        } else if (container.id == "objlist") {
+        image.src = "img/nouns2/" + nouns[i][0] + ".jpg";
+        }
 
         cell.appendChild(image);
         cell.appendChild(buttonCreator(nouns[i][0], i));
@@ -1323,7 +1327,7 @@ function createAdjList(container, buttonCreator) {
         const cell = row.appendChild(document.createElement("td"));
 
         const image = document.createElement("img");
-        image.src = "img/adj/" + adjectivesstrong[i][0] + ".png";
+        image.src = "img/adj/" + adjectivesstrong[i][0] + ".jpg";
 
         cell.appendChild(image);
         cell.appendChild(buttonCreator(adjectivesstrong[i][0], i));
@@ -1369,7 +1373,7 @@ function generateVerbList() {
         const cell = row.appendChild(document.createElement("td"));
 
         const image = document.createElement("img");
-        image.src = "img/verbs/" + verbs[i][0] + ".png";
+        image.src = "img/verbs/" + verbs[i][0] + ".jpg";
 
         cell.appendChild(image);
         cell.appendChild(createVerbButton(verbs[i][0], i));
@@ -1389,7 +1393,7 @@ function createAuxList() {
         const cell = row.appendChild(document.createElement("td"));
 
         const image = document.createElement("img");
-        image.src = "img/aux/" + modalverbs[i][0] + ".png";
+        image.src = "img/aux/" + modalverbs[i][0] + ".jpg";
 
         cell.appendChild(image);
         cell.appendChild(createAuxButton(modalverbs[i][0] + modalverbs[i][3], i));
