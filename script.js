@@ -1131,12 +1131,12 @@ if (resultobj[1] === "f") {
 }
 
 let fall = nouns[selectedSubject][5];
-if (verbs[selectedVerb][0] == "vanta" || verbs[selectedVerb][0] == "langa") {
-fall = 2;
-}
 
 if (switchnumber == 1) {
 fall = 5;
+}
+if (verbs[selectedVerb][0] == "vanta" || verbs[selectedVerb][0] == "langa") {
+fall = 2;
 }
 
 if (isThereAux == 0 && pasttense == 0) {
