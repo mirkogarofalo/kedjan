@@ -157,7 +157,7 @@ float: right;
     height: 40px;
     margin: 6px;
     border-radius: 8px;
-    border: 0px;
+    border: 1px solid white;
     background-color: greenyellow;
     font-size: 16px;
     cursor: pointer;
@@ -165,6 +165,7 @@ float: right;
 
 .boxverb:hover {
     background-color: white;
+    border: 1px solid greenyellow;
 }
 
 .boxsubj {
@@ -172,7 +173,7 @@ float: right;
     height: 40px;
     margin: 6px;
     border-radius: 8px;
-    border: 0px;
+    border: 1px solid white;
     background-color:coral;
     font-size: 16px;
     cursor: pointer;
@@ -180,36 +181,39 @@ float: right;
 
 .boxsubj:hover {
     background-color: white;
+    border: 1px solid coral;
 }
 
 .boxsubjadj {
-    width: 100px;
+    width: 110px;
     height: 40px;
     margin: 6px;
     border-radius: 8px;
-    border: 0px;
-    background-color:coral;
+    border: 1px solid white;
+    background-color: #1ca7e3;
     font-size: 16px;
     cursor: pointer;
 }
 
 .boxsubjadj:hover {
     background-color: white;
+    border: 1px solid #1ca7e3;
 }
 
 .boxobjadj {
-    width: 100px;
+    width: 110px;
     height: 40px;
     margin: 6px;
     border-radius: 8px;
-    border: 0px;
-    background-color:coral;
+    border: 1px solid white;
+    background-color:#1ca7e3;
     font-size: 16px;
     cursor: pointer;
 }
 
 .boxobjadj:hover {
     background-color: white;
+    border: 1px solid #1ca7e3;
 }
 
 .boxaux {
@@ -217,14 +221,15 @@ float: right;
     height: 40px;
     margin: 6px;
     border-radius: 8px;
-    border: 0px;
-    background-color:aqua;
+    border: 1px solid white;
+    background-color:#dddddd;
     font-size: 16px;
     cursor: pointer;
 }
 
 .boxaux:hover {
     background-color: white;
+    border: 1px solid #dddddd;
 }
 
 .boxobj {
@@ -232,14 +237,15 @@ float: right;
     height: 40px;
     margin: 6px;
     border-radius: 8px;
-    border: 0px;
-    background-color:aqua;
+    border: 1px solid white;
+    background-color:#fdf763;
     font-size: 16px;
     cursor: pointer;
 }
 
 .boxobj:hover {
     background-color: white;
+    border: 1px solid #fdf763;
 }
 
     /* Main content */
@@ -637,31 +643,13 @@ width: 460px;
       font-size: 0.72rem;
     }
 
-    /* Responsive layout */
-    @media (max-width: 850px) {
-      body {
-        padding: 12px;
-      }
-
-      .dashboard {
-        min-height: auto;
-      }
-
-      .sidebar {
-        flex-basis: 190px;
-      }
-
-      .main {
-        padding: 28px;
-      }
-
-      .content-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 650px) {
-      .dashboard {
+   @media (max-width: 650px) {
+  body {
+    align-items: flex-start;
+    padding: 8px;
+  }
+  
+   .dashboard {
         flex-direction: column;
         border-radius: 18px;
       }
@@ -699,24 +687,286 @@ width: 460px;
         display: none;
       }
 
-      .main {
-        padding: 24px 18px;
+  .main {
+    width: 100%;
+    min-width: 0;
+    padding: 20px 12px;
+  }
+
+  .topbar {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  
+  .dialogwin {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    padding: 12px;
+    overflow: hidden;
+  }
+
+  .dialogwin > .container {
+    width: 100%;
+    min-width: 0;
+  }
+
+  
+  #verblist,
+  #nounlist,
+  #objlist,
+  #adjsubjlist,
+  #adjobjlist,
+  #auxlist {
+    display: block;
+    width: 100%;
+    table-layout: fixed;
+  }
+
+  #verblist tr,
+  #nounlist tr,
+  #objlist tr,
+  #adjsubjlist tr,
+  #adjobjlist tr,
+  #auxlist tr {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  #verblist td,
+  #nounlist td,
+  #objlist td,
+  #adjsubjlist td,
+  #adjobjlist td,
+  #auxlist td {
+    min-width: 0;
+    padding: 4px;
+    vertical-align: top;
+  }
+
+  .container img {
+    display: block;
+    width: 64px;
+    height: 64px;
+    max-width: 100%;
+    object-fit: contain;
+    margin: 6px auto;
+  }
+
+  .boxverb,
+  .boxsubj,
+  .boxsubjadj,
+  .boxobjadj,
+  .boxaux,
+  .boxobj {
+    display: block;
+    width: auto;
+    max-width: 100%;
+    margin: 4px auto;
+    padding: 6px;
+    font-size: 14px;
+    overflow-wrap: anywhere;
+  }
+
+  
+  #strfinal {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100%;
+    table-layout: fixed;
+  }
+
+  #strfinal tr {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    height: auto !important;
+  }
+
+  #strfinal td {
+    width: auto;
+    min-width: 0;
+    padding: 4px 2px;
+    overflow-wrap: anywhere;
+  }
+
+  #strfinal .menubutton,
+  #strfinal .menubuttonf,
+  #strfinal .openbin {
+    max-width: 100%;
+    padding: 6px;
+    font-size: 13px;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  #bin {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+  }
+}
+
+@media (max-width: 850px) {
+  body {
+    align-items: flex-start;
+    padding: 8px;
+  }
+  
+   .dashboard {
+        flex-direction: column;
+        border-radius: 18px;
       }
 
-      .topbar {
-        align-items: flex-start;
-        margin-bottom: 28px;
+      .sidebar {
+        flex: none;
+        padding: 18px;
       }
 
-      .profile span {
+      .brand {
+        margin: 0 8px 20px;
+      }
+
+      .menu-label,
+      .sidebar-footer {
         display: none;
       }
 
-      .hero {
-        padding: 22px;
+      .nav {
+        display: flex;
+        gap: 6px;
+        overflow-x: auto;
       }
 
-      .stats {
-        grid-template-columns: 1fr;
+      .nav a {
+        flex: 0 0 auto;
+        padding: 10px 12px;
       }
-    }
+
+      .nav a.active {
+        box-shadow: inset 0 -3px var(--primary);
+      }
+
+      .nav a span:last-child {
+        display: none;
+      }
+
+  .main {
+    width: 100%;
+    min-width: 0;
+    padding: 20px 12px;
+  }
+
+  .topbar {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  
+  .dialogwin {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    padding: 12px;
+    overflow: hidden;
+  }
+
+  .dialogwin > .container {
+    width: 100%;
+    min-width: 0;
+  }
+
+  
+  #verblist,
+  #nounlist,
+  #objlist,
+  #adjsubjlist,
+  #adjobjlist,
+  #auxlist {
+    display: block;
+    width: 100%;
+    table-layout: fixed;
+  }
+
+  #verblist tr,
+  #nounlist tr,
+  #objlist tr,
+  #adjsubjlist tr,
+  #adjobjlist tr,
+  #auxlist tr {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  #verblist td,
+  #nounlist td,
+  #objlist td,
+  #adjsubjlist td,
+  #adjobjlist td,
+  #auxlist td {
+    min-width: 0;
+    padding: 4px;
+    vertical-align: top;
+  }
+
+  .container img {
+    display: block;
+    width: 64px;
+    height: 64px;
+    max-width: 100%;
+    object-fit: contain;
+    margin: 6px auto;
+  }
+
+  .boxverb,
+  .boxsubj,
+  .boxsubjadj,
+  .boxobjadj,
+  .boxaux,
+  .boxobj {
+    display: block;
+    width: auto;
+    max-width: 100%;
+    margin: 4px auto;
+    padding: 6px;
+    font-size: 14px;
+    overflow-wrap: anywhere;
+  }
+
+  
+  #strfinal {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100%;
+    table-layout: fixed;
+  }
+
+  #strfinal tr {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    height: auto !important;
+  }
+
+  #strfinal td {
+    width: auto;
+    min-width: 0;
+    padding: 4px 2px;
+    overflow-wrap: anywhere;
+  }
+
+  #strfinal .menubutton,
+  #strfinal .menubuttonf,
+  #strfinal .openbin {
+    max-width: 100%;
+    padding: 6px;
+    font-size: 13px;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
+  #bin {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+  }
+}
